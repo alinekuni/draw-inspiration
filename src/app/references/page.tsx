@@ -127,12 +127,12 @@ export default function ReferencesPage() {
 
       {/* Header */}
       <div className="flex-shrink-0 px-5 pt-5 pb-1">
-        <p className="font-body text-[10px] tracking-[0.2em] uppercase text-ink-muted">
+        <p className="font-body text-[10px] tracking-[0.2em] uppercase text-ink/50 mb-3">
           {t.references.header}
         </p>
-        <p className="font-display italic text-[13px] text-ink/55 mt-0.5">
+        <h1 className="font-display italic text-[28px] text-ink/75 leading-[1.15]">
           {t.references.subheader}
-        </p>
+        </h1>
       </div>
 
       {/* Filter tabs */}
