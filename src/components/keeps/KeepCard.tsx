@@ -48,9 +48,9 @@ const ROTATIONS = [-4, 2, -1.5];
 
 export default function KeepCard({ keep, onDelete }: KeepCardProps) {
   const { t } = useTranslation();
-  const [expanded, setExpanded]   = useState(false);
-  const [photos, setPhotos]       = useState<string[]>([]);
-  const [uploading, setUploading] = useState(false);
+  const [expanded, setExpanded]       = useState(false);
+  const [photos, setPhotos]           = useState<string[]>([]);
+  const [uploading, setUploading]     = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -97,58 +97,105 @@ export default function KeepCard({ keep, onDelete }: KeepCardProps) {
   return (
     <div className="bg-paper rounded-2xl shadow-card border border-ink/[0.06] overflow-hidden">
 
-      {/* ── Collapsed row ── */}
+      <input
+        ref={fileRef}
+        type="file"
+        accept="image/*"
+        multiple
+        onChange={handleUpload}
+        className="hidden"
+      />
+
+      {/* ── Main row ── */}
       <button
         type="button"
         onClick={() => setExpanded((e) => !e)}
-        className="w-full text-left px-4 py-4 flex items-start gap-3 active:opacity-75 transition-opacity"
+        className="w-full text-left px-4 pt-4 pb-4 active:opacity-75 transition-opacity"
       >
-        {/* Photo stack */}
-        <div className="relative w-14 h-14 shrink-0 mt-0.5">
-          {photos.length > 0 ? (
-            photos.slice(0, 3).map((photo, i) => (
-              <img
-                key={i}
-                src={photo}
-                alt=""
-                className="absolute inset-0 w-full h-full object-cover rounded-lg shadow-sm"
-                style={{ transform: `rotate(${ROTATIONS[i] ?? 0}deg)` }}
-              />
-            ))
-          ) : (
-            <div className="w-full h-full rounded-lg border border-dashed border-ink/15
-                            flex items-center justify-center">
-              <span className="text-ink/20 text-xl leading-none">+</span>
-            </div>
-          )}
-          {photos.length > 3 && (
-            <span className="absolute -bottom-1.5 -right-1.5 bg-ink text-paper
-                             rounded-full w-4 h-4 flex items-center justify-center
-                             font-body text-[8px]">
-              +{photos.length - 3}
-            </span>
-          )}
+        {/* Top row: chips label + reference tag + icon actions */}
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2 min-w-0 flex-1 pr-2">
+            <p className="font-body text-[9px] tracking-[0.1em] uppercase text-ink/30 truncate">
+              {keep.chips.join(" · ")}
+            </p>
+            {keep.inspirationBoardId && t.references.boards[keep.inspirationBoardId] && (
+              <span className="shrink-0 inline-flex items-center gap-1 rounded-full
+                               border border-olive/25 bg-olive/[0.05]
+                               px-2 py-0.5 font-body text-[8px] tracking-[0.1em]
+                               uppercase text-olive/60">
+                ✦ {t.references.boards[keep.inspirationBoardId].name}
+              </span>
+            )}
+          </div>
+          {/* Circle icon buttons — stop propagation */}
+          <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              disabled={uploading}
+              aria-label={t.keeps.addDrawing}
+              className="w-7 h-7 rounded-full border border-ink/15 flex items-center justify-center
+                         text-ink/35 hover:text-ink/65 hover:border-ink/30
+                         transition-colors active:scale-90 disabled:opacity-30"
+            >
+              <CameraIcon />
+            </button>
+            <button
+              type="button"
+              onClick={handleDelete}
+              aria-label={t.keeps.removeKeep}
+              className="w-7 h-7 rounded-full border border-ink/10 flex items-center justify-center
+                         text-ink/25 hover:text-burnt-orange/60 hover:border-burnt-orange/20
+                         transition-colors active:scale-90"
+            >
+              <TrashIcon />
+            </button>
+          </div>
         </div>
 
-        {/* Text */}
-        <div className="flex-1 min-w-0">
-          <p className="font-display text-[17px] text-ink leading-tight">{keep.title}</p>
-          <p className="font-body text-[11px] text-ink/45 leading-snug mt-1 line-clamp-2">
-            {keep.prompt}
-          </p>
-          <p className="font-body text-[9px] tracking-[0.08em] uppercase text-ink/30 mt-2">
-            {keep.chips.join(" · ")}
-          </p>
-        </div>
+        {/* Content row: photo area + text */}
+        <div className="flex items-start gap-3">
+          {/* Photo stack / empty placeholder */}
+          <div
+            className="relative w-14 h-14 shrink-0 mt-0.5"
+            onClick={photos.length === 0
+              ? (e) => { e.stopPropagation(); fileRef.current?.click(); }
+              : undefined
+            }
+          >
+            {photos.length > 0 ? (
+              photos.slice(0, 3).map((photo, i) => (
+                <img
+                  key={i}
+                  src={photo}
+                  alt=""
+                  className="absolute inset-0 w-full h-full object-cover rounded-lg shadow-sm"
+                  style={{ transform: `rotate(${ROTATIONS[i] ?? 0}deg)` }}
+                />
+              ))
+            ) : (
+              <div className="w-full h-full rounded-lg border border-dashed border-ink/20
+                              flex items-center justify-center hover:border-ink/35 transition-colors">
+                <span className="text-ink/20 text-xl leading-none">+</span>
+              </div>
+            )}
+            {photos.length > 3 && (
+              <span className="absolute -bottom-1.5 -right-1.5 bg-ink text-paper
+                               rounded-full w-4 h-4 flex items-center justify-center
+                               font-body text-[8px]">
+                +{photos.length - 3}
+              </span>
+            )}
+          </div>
 
-        {/* Chevron */}
-        <motion.span
-          animate={{ rotate: expanded ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
-          className="text-ink/20 shrink-0 mt-1 text-[11px]"
-        >
-          ↓
-        </motion.span>
+          {/* Text */}
+          <div className="flex-1 min-w-0">
+            <p className="font-display text-[17px] text-ink leading-tight">{keep.title}</p>
+            <p className="font-body text-[11px] text-ink/45 leading-snug mt-1 line-clamp-2">
+              {keep.prompt}
+            </p>
+          </div>
+        </div>
       </button>
 
       {/* ── Expanded ── */}
@@ -215,47 +262,12 @@ export default function KeepCard({ keep, onDelete }: KeepCardProps) {
                 </div>
               )}
 
-              {/* Upload */}
-              <input
-                ref={fileRef}
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleUpload}
-                className="hidden"
-              />
-              <button
-                type="button"
-                onClick={() => fileRef.current?.click()}
-                disabled={uploading}
-                className="w-full rounded-xl border border-dashed border-ink/20 py-3.5
-                           font-body text-[10px] tracking-[0.15em] uppercase text-ink/35
-                           hover:border-ink/35 hover:text-ink/55 transition-colors
-                           disabled:opacity-30 active:opacity-60"
-              >
-                {uploading
-                  ? t.keeps.adding
-                  : photos.length > 0
-                  ? t.keeps.addMoreDrawings
-                  : t.keeps.addDrawing}
-              </button>
-
               {/* Upload error */}
               {uploadError && (
-                <p className="font-body text-[10px] text-burnt-orange/70 text-center -mt-2">
+                <p className="font-body text-[10px] text-burnt-orange/70 text-center">
                   {uploadError}
                 </p>
               )}
-
-              {/* Delete */}
-              <button
-                type="button"
-                onClick={handleDelete}
-                className="w-full text-center font-body text-[9px] tracking-[0.15em]
-                           uppercase text-ink/20 hover:text-burnt-orange/50 transition-colors"
-              >
-                {t.keeps.removeKeep}
-              </button>
 
             </div>
           </motion.div>
@@ -263,5 +275,26 @@ export default function KeepCard({ keep, onDelete }: KeepCardProps) {
       </AnimatePresence>
 
     </div>
+  );
+}
+
+function CameraIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+      <path d="M4.5 2.5 3.8 3.5H2a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V4a.5.5 0 0 0-.5-.5H8.2L7.5 2.5H4.5Z"
+        stroke="currentColor" strokeWidth="1.1" strokeLinejoin="round" />
+      <circle cx="6" cy="6.5" r="1.5" stroke="currentColor" strokeWidth="1.1" />
+    </svg>
+  );
+}
+
+function TrashIcon() {
+  return (
+    <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true">
+      <path d="M1.5 2.75h8M4.5 2.75V2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v.75M4 2.75l.5 5.5M7 2.75l-.5 5.5"
+        stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="2" y="2.75" width="7" height="6" rx=".75"
+        stroke="currentColor" strokeWidth="1.1" />
+    </svg>
   );
 }

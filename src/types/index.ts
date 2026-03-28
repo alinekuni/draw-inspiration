@@ -16,6 +16,7 @@ export interface GeneratedPrompt {
   chips: string[];
   breakdown: PromptBreakdown;
   createdAt: number;
+  inspirationBoardId?: string;
 }
 
 export interface BuildState {

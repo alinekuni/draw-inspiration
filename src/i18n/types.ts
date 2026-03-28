@@ -52,8 +52,10 @@ export type TranslationNamespace = {
     moodBoardLabel: string;
     sparkWithThis: string;
     emptyInspirationTitle: string;
+    emptyInspirationHint: string;
     emptyInspirationLink: string;
     emptyGeneratedTitle: string;
+    emptyGeneratedHint: string;
     emptyGeneratedLink: string;
   };
   references: {

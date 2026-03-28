@@ -57,9 +57,11 @@ export const en: TranslationNamespace = {
     generatedSection:     "Scenes",
     moodBoardLabel:       "inspiration",
     sparkWithThis:        "Spark with this",
-    emptyInspirationTitle:"No inspiration boards saved yet.",
+    emptyInspirationTitle:"No inspiration saved yet.",
+    emptyInspirationHint: "Browse the reference boards and keep the ones that speak to you.",
     emptyInspirationLink: "Browse references →",
     emptyGeneratedTitle:  "No scenes saved yet.",
+    emptyGeneratedHint:   "Spark a prompt and keep the ones worth returning to.",
     emptyGeneratedLink:   "Spark your first scene →",
   },
 

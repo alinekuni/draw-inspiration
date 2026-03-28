@@ -89,7 +89,10 @@ export default function SparkPage() {
 
   const handleSave = () => {
     if (!currentPrompt) return;
-    savePrompt(currentPrompt);
+    const toSave = inspirationBoardId
+      ? { ...currentPrompt, inspirationBoardId }
+      : currentPrompt;
+    savePrompt(toSave);
     setSavedIds((prev) => new Set(Array.from(prev).concat(currentPrompt.id)));
   };
 
@@ -306,8 +309,10 @@ export default function SparkPage() {
               disabled={isSaved}
               className="flex-1 border border-ink/15 text-ink/70 rounded-full px-5 py-2.5
                          font-body text-xs tracking-wide active:scale-95 transition-all duration-100
-                         disabled:opacity-40 disabled:cursor-default"
+                         disabled:opacity-40 disabled:cursor-default
+                         flex items-center justify-center gap-1.5"
             >
+              <SparkHeartIcon filled={isSaved} />
               {isSaved ? t.spark.keptBtn : t.spark.keepBtn}
             </button>
           </div>
@@ -334,5 +339,15 @@ export default function SparkPage() {
       />
 
     </div>
+  );
+}
+
+function SparkHeartIcon({ filled }: { filled: boolean }) {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+      <path d="M6 10S1.5 7 1.5 4a2.5 2.5 0 0 1 4.5-1.5A2.5 2.5 0 0 1 10.5 4C10.5 7 6 10 6 10Z"
+        stroke="currentColor" strokeWidth="1.15" strokeLinejoin="round"
+        fill={filled ? "currentColor" : "none"} />
+    </svg>
   );
 }

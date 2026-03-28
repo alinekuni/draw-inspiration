@@ -58,8 +58,10 @@ export const ptBR: TranslationNamespace = {
     moodBoardLabel:       "inspiração",
     sparkWithThis:        "Inspirar com este",
     emptyInspirationTitle:"Nenhuma inspiração salva ainda.",
+    emptyInspirationHint: "Explore as referências e guarde as que te tocam.",
     emptyInspirationLink: "Ver referências →",
     emptyGeneratedTitle:  "Nenhuma cena salva ainda.",
+    emptyGeneratedHint:   "Gere um prompt e guarde os que valem a pena revisitar.",
     emptyGeneratedLink:   "Criar a sua primeira cena →",
   },
 

@@ -40,7 +40,8 @@ function sanitizeStringArray(arr: unknown): string[] {
   return arr
     .slice(0, MAX_ARRAY_ITEMS)
     .filter((x): x is string => typeof x === "string")
-    .map((s) => s.slice(0, MAX_ITEM_LENGTH).replace(/[<>"'&]/g, ""));
+    .map((s) => s.slice(0, MAX_ITEM_LENGTH).trim())
+    .filter((s) => ALLOWED_CHARS.test(s));
 }
 
 function sanitizeLockedRecord(obj: unknown): Record<string, string> {

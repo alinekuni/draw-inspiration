@@ -196,7 +196,7 @@ export default function ReferencesPage() {
                                  text-ink/35 hover:text-ink/65 hover:border-ink/30
                                  transition-colors active:scale-90"
                     >
-                      <BookmarkIcon />
+                      <HeartIcon />
                     </button>
                     <button
                       type="button"
@@ -260,10 +260,10 @@ export default function ReferencesPage() {
   );
 }
 
-function BookmarkIcon() {
+function HeartIcon() {
   return (
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-      <path d="M2.5 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 .5.5v8.5L6 8.5 2.5 10.5V2Z"
+      <path d="M6 10S1.5 7 1.5 4a2.5 2.5 0 0 1 4.5-1.5A2.5 2.5 0 0 1 10.5 4C10.5 7 6 10 6 10Z"
         stroke="currentColor" strokeWidth="1.15" strokeLinejoin="round" />
     </svg>
   );
