@@ -50,11 +50,13 @@ export type TranslationNamespace = {
     subheader: string;
     allFilter: string;
     categories: Record<string, string>;
+    boards: Record<string, { name: string; verse: string; invitation: string }>;
   };
   compose: {
     title: string;
     doneBtn: string;
     categories: Record<string, string>;
+    chipLabels: Record<string, string>;
   };
   promptCard: {
     label: string;
