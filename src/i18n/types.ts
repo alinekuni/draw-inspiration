@@ -20,6 +20,8 @@ export type TranslationNamespace = {
     tryAgainBtn: string;
     composeLink: string;
     sessionPrefix: string;  // "Session 01 · Scene"
+    inspiredBy: string;
+    clearInspiration: string;
     moods: Record<string, string>;
   };
   keeps: {
@@ -44,11 +46,23 @@ export type TranslationNamespace = {
     storageFullError: string;
     photoLimitError: string;
     removeKeep: string;
+    // Dual-section layout
+    inspirationSection: string;
+    generatedSection: string;
+    moodBoardLabel: string;
+    sparkWithThis: string;
+    emptyInspirationTitle: string;
+    emptyInspirationLink: string;
+    emptyGeneratedTitle: string;
+    emptyGeneratedLink: string;
   };
   references: {
     header: string;
     subheader: string;
     allFilter: string;
+    keepBtn: string;
+    sparkBtn: string;
+    savedToInspiration: string;
     categories: Record<string, string>;
     boards: Record<string, { name: string; verse: string; invitation: string }>;
   };

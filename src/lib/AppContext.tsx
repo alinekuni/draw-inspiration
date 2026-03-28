@@ -12,6 +12,8 @@ interface AppContextValue {
   setFocusPrompt: (p: GeneratedPrompt | null) => void;
   toast: { message: string; type: "success" | "info" } | null;
   showToast: (message: string, type?: "success" | "info") => void;
+  inspirationBoardId: string | null;
+  setInspirationBoardId: (id: string | null) => void;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -22,6 +24,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [activeBoardId, setActiveBoardId] = useState<string | null>(null);
   const [focusPrompt, setFocusPrompt] = useState<GeneratedPrompt | null>(null);
   const [toast, setToast] = useState<{ message: string; type: "success" | "info" } | null>(null);
+  const [inspirationBoardId, setInspirationBoardId] = useState<string | null>(null);
 
   // Load persisted board selection on mount
   useEffect(() => {
@@ -64,6 +67,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         setFocusPrompt,
         toast,
         showToast,
+        inspirationBoardId,
+        setInspirationBoardId,
       }}
     >
       {children}

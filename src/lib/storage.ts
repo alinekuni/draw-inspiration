@@ -1,6 +1,7 @@
-import type { GeneratedPrompt } from "@/types";
+import type { GeneratedPrompt, MoodBoard } from "@/types";
 
 const PROMPTS_KEY       = "draw-inspiration:saved";
+const MOOD_BOARDS_KEY   = "draw-inspiration:moodboards";
 const PHOTOS_KEY        = "draw-inspiration:photos";
 const MAX_PHOTOS_PER_KEEP = 20;
 
@@ -46,6 +47,49 @@ export function deletePrompt(id: string): void {
     deleteKeepPhotos(id);
   } catch (err) {
     console.warn("[storage] Failed to delete prompt", err);
+  }
+}
+
+// ── Mood Boards ─────────────────────────────────────────────────────────────
+
+export function getMoodBoards(): MoodBoard[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(MOOD_BOARDS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (b): b is MoodBoard =>
+        b !== null &&
+        typeof b === "object" &&
+        b.type === "mood-board" &&
+        typeof b.id === "string" &&
+        typeof b.boardId === "string"
+    );
+  } catch {
+    console.warn("[storage] Failed to read mood boards");
+    return [];
+  }
+}
+
+export function saveMoodBoard(board: MoodBoard): void {
+  if (typeof window === "undefined") return;
+  try {
+    const existing = getMoodBoards().filter((b) => b.id !== board.id);
+    localStorage.setItem(MOOD_BOARDS_KEY, JSON.stringify([board, ...existing]));
+  } catch (err) {
+    console.warn("[storage] Failed to save mood board", err);
+  }
+}
+
+export function deleteMoodBoard(id: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    const updated = getMoodBoards().filter((b) => b.id !== id);
+    localStorage.setItem(MOOD_BOARDS_KEY, JSON.stringify(updated));
+  } catch (err) {
+    console.warn("[storage] Failed to delete mood board", err);
   }
 }
 

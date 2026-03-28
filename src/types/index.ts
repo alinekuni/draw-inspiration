@@ -33,3 +33,12 @@ export interface StyleBoard {
   chips: string[];
   description: string;
 }
+
+export interface MoodBoard {
+  type: "mood-board";
+  id: string;       // same as boardId — one entry per board in the library
+  boardId: string;
+  category: string;
+  chips: string[];
+  savedAt: number;
+}

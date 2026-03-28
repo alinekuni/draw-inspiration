@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAppContext } from "@/lib/AppContext";
+import { saveMoodBoard } from "@/lib/storage";
 import { motion } from "framer-motion";
 import clsx from "clsx";
 import { useTranslation } from "@/i18n";
+import type { MoodBoard } from "@/types";
 
 const FILTERS = ["ALL", "LIGHT", "FIGURE", "PLACE", "TIME", "MEMORY", "TENSION", "QUIET", "MYTH"] as const;
 type Filter = (typeof FILTERS)[number];
@@ -90,8 +93,9 @@ const BOARDS: Board[] = [
 ];
 
 export default function ReferencesPage() {
-  const { activeBoardId, setActiveBoardId, setSelectedStyleChips, showToast } = useAppContext();
+  const { activeBoardId, setActiveBoardId, setSelectedStyleChips, showToast, setInspirationBoardId } = useAppContext();
   const { t } = useTranslation();
+  const router = useRouter();
   const [activeFilter, setActiveFilter] = useState<Filter>("ALL");
 
   const visible = activeFilter === "ALL" ? BOARDS : BOARDS.filter((b) => b.category === activeFilter);
@@ -106,6 +110,27 @@ export default function ReferencesPage() {
       setSelectedStyleChips(board.chips);
       showToast("Added to style", "success");
     }
+  };
+
+  const handleKeepBoard = (board: Board) => {
+    const moodBoard: MoodBoard = {
+      type: "mood-board",
+      id:       board.id,
+      boardId:  board.id,
+      category: board.category,
+      chips:    board.chips,
+      savedAt:  Date.now(),
+    };
+    saveMoodBoard(moodBoard);
+    showToast(t.references.savedToInspiration, "success");
+    setActiveBoardId(null);
+    setSelectedStyleChips([]);
+  };
+
+  const handleSparkBoard = (board: Board) => {
+    setInspirationBoardId(board.id);
+    setSelectedStyleChips(board.chips);
+    router.push("/spark");
   };
 
   return (
@@ -204,11 +229,34 @@ export default function ReferencesPage() {
                 {tBoard?.verse}
               </p>
 
-              {/* Invitation — only visible when active */}
+              {/* Invitation + actions — only visible when active */}
               {isActive && (
-                <p className="font-body text-[13px] text-ink/65 leading-relaxed mt-3 mb-2">
-                  {tBoard?.invitation}
-                </p>
+                <>
+                  <p className="font-body text-[13px] text-ink/65 leading-relaxed mt-3">
+                    {tBoard?.invitation}
+                  </p>
+                  <div className="flex gap-2 mt-4 pt-3 border-t border-ink/[0.06]"
+                    onClick={(e) => e.stopPropagation()}>
+                    <button
+                      type="button"
+                      onClick={() => handleKeepBoard(board)}
+                      className="flex-1 rounded-full border border-ink/20 py-2
+                                 font-body text-[10px] tracking-[0.12em] uppercase text-ink/50
+                                 hover:text-ink/70 hover:border-ink/35 transition-colors active:scale-95"
+                    >
+                      {t.references.keepBtn}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSparkBoard(board)}
+                      className="flex-1 rounded-full bg-ink py-2
+                                 font-body text-[10px] tracking-[0.12em] uppercase text-paper
+                                 hover:opacity-85 transition-opacity active:scale-95"
+                    >
+                      {t.references.sparkBtn}
+                    </button>
+                  </div>
+                </>
               )}
 
               {/* Chips — passive label styling */}

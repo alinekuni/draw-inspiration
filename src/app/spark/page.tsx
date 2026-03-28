@@ -10,6 +10,7 @@ import { generatePrompt } from "@/lib/gemini";
 import { savePrompt } from "@/lib/storage";
 import { Chip } from "@/components/ui/Chip";
 import { useTranslation } from "@/i18n";
+import { useAppContext } from "@/lib/AppContext";
 import type { GeneratedPrompt } from "@/types";
 
 function encodePromptForShare(data: GeneratedPrompt): string {
@@ -33,6 +34,7 @@ const fade = {
 
 export default function SparkPage() {
   const { t, lang } = useTranslation();
+  const { inspirationBoardId, setInspirationBoardId, selectedStyleChips, setSelectedStyleChips } = useAppContext();
   const [screen, setScreen]             = useState<ScreenState>("empty");
   const [history, setHistory]           = useState<GeneratedPrompt[]>([]);
   const [composeHistory, setComposeHistory] = useState<string[][]>([]);
@@ -96,6 +98,23 @@ export default function SparkPage() {
     const encoded = encodePromptForShare(currentPrompt);
     const url = `${window.location.origin}/s?d=${encoded}`;
     navigator.clipboard.writeText(url).catch(() => {});
+  };
+
+  // Pre-fill compose from inspiration board on mount
+  const inspirationInitialized = useRef(false);
+  useEffect(() => {
+    if (inspirationInitialized.current) return;
+    if (inspirationBoardId && selectedStyleChips.length > 0) {
+      inspirationInitialized.current = true;
+      setConfirmedCompose({ STYLE: selectedStyleChips });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleClearInspiration = () => {
+    setInspirationBoardId(null);
+    setSelectedStyleChips([]);
+    setConfirmedCompose(null);
   };
 
   // Re-generate the current prompt when the language changes
@@ -209,6 +228,24 @@ export default function SparkPage() {
 
       {/* ── Action bar ── */}
       <div className="flex-shrink-0 px-5 pt-3 pb-3 border-t border-ink/[0.06] bg-canvas/90 backdrop-blur-sm">
+
+        {/* Inspired by badge */}
+        {inspirationBoardId && (
+          <div className="flex items-center justify-between mb-2">
+            <span className="font-body text-[9px] tracking-[0.12em] uppercase text-olive/60">
+              ✦ {t.spark.inspiredBy}: {t.references.boards[inspirationBoardId]?.name}
+            </span>
+            <button
+              type="button"
+              onClick={handleClearInspiration}
+              aria-label={t.spark.clearInspiration}
+              className="font-body text-[9px] tracking-[0.1em] uppercase text-ink/25
+                         hover:text-ink/50 transition-colors active:opacity-60"
+            >
+              {t.spark.clearInspiration}
+            </button>
+          </div>
+        )}
 
         {/* Compose row — always visible */}
         <AnimatePresence mode="wait">

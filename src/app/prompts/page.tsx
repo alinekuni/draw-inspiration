@@ -1,26 +1,45 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import KeepCard from "@/components/keeps/KeepCard";
-import { getSavedPrompts, deletePrompt, getKeepStats } from "@/lib/storage";
+import MoodBoardCard from "@/components/keeps/MoodBoardCard";
+import { getSavedPrompts, deletePrompt, getMoodBoards, deleteMoodBoard, getKeepStats } from "@/lib/storage";
+import { useAppContext } from "@/lib/AppContext";
 import { useTranslation } from "@/i18n";
-import type { GeneratedPrompt } from "@/types";
+import type { GeneratedPrompt, MoodBoard } from "@/types";
 
 export default function KeepsPage() {
   const { t } = useTranslation();
-  const [keeps, setKeeps]     = useState<GeneratedPrompt[]>([]);
-  const [mounted, setMounted] = useState(false);
+  const router = useRouter();
+  const { setInspirationBoardId, setSelectedStyleChips } = useAppContext();
+
+  const [keeps, setKeeps]           = useState<GeneratedPrompt[]>([]);
+  const [moodBoards, setMoodBoards] = useState<MoodBoard[]>([]);
+  const [mounted, setMounted]       = useState(false);
 
   useEffect(() => {
     setKeeps(getSavedPrompts());
+    setMoodBoards(getMoodBoards());
     setMounted(true);
   }, []);
 
-  const handleDelete = (id: string) => {
+  const handleDeleteKeep = (id: string) => {
     deletePrompt(id);
     setKeeps((prev) => prev.filter((k) => k.id !== id));
+  };
+
+  const handleDeleteMoodBoard = (id: string) => {
+    deleteMoodBoard(id);
+    setMoodBoards((prev) => prev.filter((b) => b.id !== id));
+  };
+
+  const handleSparkMoodBoard = (board: MoodBoard) => {
+    setInspirationBoardId(board.boardId);
+    setSelectedStyleChips(board.chips);
+    router.push("/spark");
   };
 
   const handleExport = () => {
@@ -45,7 +64,7 @@ export default function KeepsPage() {
     <div className="flex flex-col h-full bg-canvas">
       <div className="flex-1 min-h-0 overflow-y-auto">
 
-        {/* ── About — bare text, no card ── */}
+        {/* ── About ── */}
         <div className="px-5 pt-8 pb-6">
           <p className="font-body text-[10px] tracking-[0.2em] uppercase text-ink/30 mb-3">
             {t.keeps.label} <span className="opacity-40">✦</span>
@@ -73,31 +92,67 @@ export default function KeepsPage() {
           </div>
         </div>
 
-        {/* ── Keeps list ── */}
-        {!mounted ? null : keeps.length === 0 ? (
-          <div className="px-5 pt-2 pb-10">
-            <div className="border-t border-ink/[0.07] pt-6 flex flex-col items-center">
-              <p className="font-display italic text-[16px] text-ink/30 text-center">
-                {t.keeps.emptyTitle}
-              </p>
-              <Link
-                href="/spark"
-                className="mt-4 font-body text-[9px] tracking-[0.2em] uppercase
-                           text-olive/50 active:opacity-60 transition-opacity"
-              >
-                {t.keeps.emptyLink}
-              </Link>
+        {!mounted ? null : (
+          <div className="px-5 pb-10 space-y-8">
+
+            {/* ── Inspiration section ── */}
+            <div>
+              <div className="border-t border-ink/[0.07] pt-4 mb-3 flex items-center justify-between">
+                <span className="font-body text-[9px] tracking-[0.2em] uppercase text-ink/30">
+                  {t.keeps.inspirationSection}
+                </span>
+              </div>
+
+              {moodBoards.length === 0 ? (
+                <div className="pt-2 pb-4 flex flex-col items-start">
+                  <p className="font-display italic text-[15px] text-ink/30">
+                    {t.keeps.emptyInspirationTitle}
+                  </p>
+                  <Link
+                    href="/references"
+                    className="mt-3 font-body text-[9px] tracking-[0.2em] uppercase
+                               text-olive/50 active:opacity-60 transition-opacity"
+                  >
+                    {t.keeps.emptyInspirationLink}
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <AnimatePresence initial={false}>
+                    {moodBoards.map((board) => (
+                      <motion.div
+                        key={board.id}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.22, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        <MoodBoardCard
+                          board={board}
+                          onSpark={() => handleSparkMoodBoard(board)}
+                          onDelete={() => handleDeleteMoodBoard(board.id)}
+                        />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
+              )}
             </div>
-          </div>
-        ) : (
-          <div className="px-5 pb-10">
-            {/* List header — count + stats + export */}
-            <div className="border-t border-ink/[0.07] pt-4 mb-3">
-              <div className="flex items-center justify-between">
+
+            {/* ── Generated section ── */}
+            <div>
+              <div className="border-t border-ink/[0.07] pt-4 mb-3 flex items-center justify-between">
                 <div className="flex items-center gap-1.5 flex-wrap">
                   <span className="font-body text-[9px] tracking-[0.2em] uppercase text-ink/30">
-                    {keeps.length} {keeps.length === 1 ? t.keeps.sceneSingular : t.keeps.scenePlural}
+                    {t.keeps.generatedSection}
                   </span>
+                  {keeps.length > 0 && (
+                    <>
+                      <span className="text-ink/15 text-[9px]">·</span>
+                      <span className="font-body text-[9px] tracking-[0.12em] uppercase text-ink/25">
+                        {keeps.length} {keeps.length === 1 ? t.keeps.sceneSingular : t.keeps.scenePlural}
+                      </span>
+                    </>
+                  )}
                   {stats && stats.totalPhotos > 0 && (
                     <>
                       <span className="text-ink/15 text-[9px]">·</span>
@@ -106,43 +161,53 @@ export default function KeepsPage() {
                       </span>
                     </>
                   )}
-                  {stats?.topChip && (
-                    <>
-                      <span className="text-ink/15 text-[9px]">·</span>
-                      <span className="font-body text-[9px] tracking-[0.12em] uppercase text-ink/25">
-                        {stats.topChip}
-                      </span>
-                    </>
-                  )}
                 </div>
-                <button
-                  type="button"
-                  onClick={handleExport}
-                  className="font-body text-[9px] tracking-[0.15em] uppercase shrink-0
-                             text-ink/25 hover:text-ink/55 transition-colors active:opacity-60"
-                >
-                  {t.keeps.exportBtn}
-                </button>
+                {keeps.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleExport}
+                    className="font-body text-[9px] tracking-[0.15em] uppercase shrink-0
+                               text-ink/25 hover:text-ink/55 transition-colors active:opacity-60"
+                  >
+                    {t.keeps.exportBtn}
+                  </button>
+                )}
               </div>
+
+              {keeps.length === 0 ? (
+                <div className="pt-2 pb-4 flex flex-col items-start">
+                  <p className="font-display italic text-[15px] text-ink/30">
+                    {t.keeps.emptyGeneratedTitle}
+                  </p>
+                  <Link
+                    href="/spark"
+                    className="mt-3 font-body text-[9px] tracking-[0.2em] uppercase
+                               text-olive/50 active:opacity-60 transition-opacity"
+                  >
+                    {t.keeps.emptyGeneratedLink}
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <AnimatePresence initial={false}>
+                    {keeps.map((keep) => (
+                      <motion.div
+                        key={keep.id}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.22, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        <KeepCard
+                          keep={keep}
+                          onDelete={() => handleDeleteKeep(keep.id)}
+                        />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
+              )}
             </div>
 
-            <div className="space-y-3">
-              <AnimatePresence initial={false}>
-                {keeps.map((keep) => (
-                  <motion.div
-                    key={keep.id}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.22, ease: "easeInOut" }}
-                    className="overflow-hidden"
-                  >
-                    <KeepCard
-                      keep={keep}
-                      onDelete={() => handleDelete(keep.id)}
-                    />
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
           </div>
         )}
 
