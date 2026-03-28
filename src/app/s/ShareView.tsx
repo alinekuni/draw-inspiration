@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import { savePrompt } from "@/lib/storage";
+import { useTranslation } from "@/i18n";
 import type { GeneratedPrompt } from "@/types";
 
 function decodePrompt(encoded: string): GeneratedPrompt | null {
@@ -27,6 +28,7 @@ function decodePrompt(encoded: string): GeneratedPrompt | null {
 }
 
 export default function ShareView() {
+  const { t } = useTranslation();
   const searchParams = useSearchParams();
   const encoded = searchParams.get("d") ?? "";
   const scene   = decodePrompt(encoded);
@@ -42,15 +44,15 @@ export default function ShareView() {
     return (
       <div className="flex flex-col h-full bg-canvas items-center justify-center px-8 text-center">
         <p className="font-display italic text-[22px] text-ink/40 leading-snug mb-4">
-          this scene has faded
+          {t.share.notFoundTitle}
         </p>
         <p className="font-body text-[11px] text-ink/35 leading-relaxed max-w-[260px]">
-          The link may be broken or the scene was never shared.
+          {t.share.notFoundText}
         </p>
         <Link href="/spark"
           className="mt-6 font-body text-[10px] tracking-[0.2em] uppercase text-olive/60
                      hover:text-olive/90 transition-colors active:opacity-60">
-          spark your own →
+          {t.share.notFoundLink}
         </Link>
       </div>
     );
@@ -62,7 +64,7 @@ export default function ShareView() {
 
         {/* Label */}
         <p className="font-body text-[9px] tracking-[0.2em] uppercase text-ink/25 mb-6">
-          someone shared a scene ✦
+          {t.share.fromLabel}
         </p>
 
         {/* Card */}
@@ -91,7 +93,7 @@ export default function ShareView() {
           {scene.breakdown?.constraint && (
             <div className="rounded-lg bg-burnt-orange/[0.07] border border-burnt-orange/[0.12] px-3.5 py-2.5 mb-4">
               <p className="font-body text-[9px] tracking-[0.2em] uppercase text-burnt-orange/70 mb-0.5">
-                constraint
+                {t.promptCard.constraintLabel}
               </p>
               <p className="font-body text-[12px] text-ink/75 leading-snug">
                 {scene.breakdown.constraint}
@@ -109,7 +111,7 @@ export default function ShareView() {
                        disabled:cursor-default
                        bg-olive text-paper disabled:bg-olive/40"
           >
-            {kept ? "✓ Kept" : "♡ Keep this scene"}
+            {kept ? t.share.keptBtn : t.share.keepBtn}
           </button>
         </div>
 
@@ -118,7 +120,7 @@ export default function ShareView() {
           <Link href="/spark"
             className="font-body text-[9px] tracking-[0.2em] uppercase text-ink/25
                        hover:text-ink/50 transition-colors active:opacity-60">
-            spark your own scene →
+            {t.share.sparkLink}
           </Link>
         </div>
 

@@ -4,15 +4,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import ThemeToggle from "./ThemeToggle";
-
-const TABS = [
-  { label: "Spark",      href: "/spark",      icon: "✦" },
-  { label: "References", href: "/references", icon: "◈" },
-  { label: "Keeps",      href: "/prompts",    icon: "♡" },
-] as const;
+import LanguageToggle from "./LanguageToggle";
+import { useTranslation } from "@/i18n";
 
 export default function BottomNav() {
   const pathname = usePathname();
+  const { t } = useTranslation();
+
+  const TABS = [
+    { label: t.nav.spark,      href: "/spark",      icon: "✦" },
+    { label: t.nav.references, href: "/references", icon: "◈" },
+    { label: t.nav.keeps,      href: "/prompts",    icon: "♡" },
+  ] as const;
 
   return (
     <nav
@@ -48,8 +51,9 @@ export default function BottomNav() {
         );
       })}
 
-      {/* Theme toggle — right of tabs, fixed width */}
-      <div className="w-12 flex items-center justify-center border-l border-ink/[0.06]">
+      {/* Utility toggles — right of tabs */}
+      <div className="w-20 flex items-center justify-center gap-0.5 border-l border-ink/[0.06]">
+        <LanguageToggle />
         <ThemeToggle />
       </div>
     </nav>

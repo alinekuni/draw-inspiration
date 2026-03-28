@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getKeepPhotos, addKeepPhoto, removeKeepPhoto, deleteKeepPhotos, getPhotoStorageBytes, PHOTO_STORAGE_WARN_BYTES } from "@/lib/storage";
+import { useTranslation } from "@/i18n";
 import type { GeneratedPrompt } from "@/types";
 
 interface KeepCardProps {
@@ -46,6 +47,7 @@ async function compressImage(file: File): Promise<string> {
 const ROTATIONS = [-4, 2, -1.5];
 
 export default function KeepCard({ keep, onDelete }: KeepCardProps) {
+  const { t } = useTranslation();
   const [expanded, setExpanded]   = useState(false);
   const [photos, setPhotos]       = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -67,8 +69,8 @@ export default function KeepCard({ keep, onDelete }: KeepCardProps) {
         if (!ok) {
           const nearLimit = getPhotoStorageBytes() >= PHOTO_STORAGE_WARN_BYTES;
           setUploadError(nearLimit
-            ? "Storage nearly full — free space by removing photos"
-            : "Photo limit reached for this keep");
+            ? t.keeps.storageFullError
+            : t.keeps.photoLimitError);
           break;
         }
       } catch (err) {
@@ -165,12 +167,12 @@ export default function KeepCard({ keep, onDelete }: KeepCardProps) {
               {(keep.breakdown.subject || keep.breakdown.environment || keep.breakdown.mood || keep.breakdown.lighting) && (
                 <div className="space-y-2">
                   {([
-                    ["subject",     keep.breakdown.subject],
-                    ["environment", keep.breakdown.environment],
-                    ["mood",        keep.breakdown.mood],
-                    ["lighting",    keep.breakdown.lighting],
-                  ] as [string, string | undefined][]).filter(([, v]) => v).map(([label, value]) => (
-                    <div key={label} className="flex gap-2">
+                    ["subject",     keep.breakdown.subject,     t.promptCard.breakdown.subject],
+                    ["environment", keep.breakdown.environment, t.promptCard.breakdown.environment],
+                    ["mood",        keep.breakdown.mood,        t.promptCard.breakdown.mood],
+                    ["lighting",    keep.breakdown.lighting,    t.promptCard.breakdown.lighting],
+                  ] as [string, string | undefined, string][]).filter(([, v]) => v).map(([key, value, label]) => (
+                    <div key={key} className="flex gap-2">
                       <span className="font-body text-[8px] tracking-[0.18em] uppercase text-ink/25 pt-[2px] w-[70px] shrink-0">
                         {label}
                       </span>
@@ -184,7 +186,7 @@ export default function KeepCard({ keep, onDelete }: KeepCardProps) {
               {keep.breakdown.constraint && (
                 <div className="rounded-lg bg-burnt-orange/[0.06] border border-burnt-orange/[0.1] px-3 py-2.5">
                   <p className="font-body text-[8px] tracking-[0.2em] uppercase text-burnt-orange/60 mb-0.5">
-                    constraint
+                    {t.promptCard.constraintLabel}
                   </p>
                   <p className="font-body text-[11px] text-ink/70 leading-snug">
                     {keep.breakdown.constraint}
@@ -232,10 +234,10 @@ export default function KeepCard({ keep, onDelete }: KeepCardProps) {
                            disabled:opacity-30 active:opacity-60"
               >
                 {uploading
-                  ? "adding..."
+                  ? t.keeps.adding
                   : photos.length > 0
-                  ? "+ add more drawings"
-                  : "+ attach your drawing"}
+                  ? t.keeps.addMoreDrawings
+                  : t.keeps.addDrawing}
               </button>
 
               {/* Upload error */}
@@ -252,7 +254,7 @@ export default function KeepCard({ keep, onDelete }: KeepCardProps) {
                 className="w-full text-center font-body text-[9px] tracking-[0.15em]
                            uppercase text-ink/20 hover:text-burnt-orange/50 transition-colors"
               >
-                remove this keep
+                {t.keeps.removeKeep}
               </button>
 
             </div>

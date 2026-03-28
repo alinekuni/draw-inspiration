@@ -8,7 +8,8 @@ import HistoryNav from "@/components/generate/HistoryNav";
 import ComposeSheet from "@/components/compose/ComposeSheet";
 import { generatePrompt } from "@/lib/gemini";
 import { savePrompt } from "@/lib/storage";
-import { ChipGroup } from "@/components/ui/Chip";
+import { Chip } from "@/components/ui/Chip";
+import { useTranslation } from "@/i18n";
 import type { GeneratedPrompt } from "@/types";
 
 function encodePromptForShare(data: GeneratedPrompt): string {
@@ -31,6 +32,7 @@ const fade = {
 };
 
 export default function SparkPage() {
+  const { t } = useTranslation();
   const [screen, setScreen]             = useState<ScreenState>("empty");
   const [history, setHistory]           = useState<GeneratedPrompt[]>([]);
   const [composeHistory, setComposeHistory] = useState<string[][]>([]);
@@ -112,21 +114,24 @@ export default function SparkPage() {
             <motion.div key="empty" {...fade}
               className="absolute inset-0 flex flex-col items-center justify-center px-8">
               <p className="font-display text-3xl text-ink/30 italic text-center leading-snug">
-                something worth drawing lives here
+                {t.spark.emptyTitle}
               </p>
               <p className="font-body text-xs text-ink-muted/50 text-center mt-3 tracking-wide">
-                pick a mood — or just spark
+                {t.spark.emptySubtitle}
               </p>
               <div className="mt-5 flex flex-wrap justify-center gap-2">
-                <ChipGroup
-                  chips={QUICK_MOODS}
-                  active={selectedMoods}
-                  onToggle={(chip) =>
-                    setSelectedMoods((prev) =>
-                      prev.includes(chip) ? prev.filter((m) => m !== chip) : [...prev, chip]
-                    )
-                  }
-                />
+                {QUICK_MOODS.map((mood) => (
+                  <Chip
+                    key={mood}
+                    label={t.spark.moods[mood] ?? mood}
+                    variant={selectedMoods.includes(mood) ? "active" : "default"}
+                    onClick={() =>
+                      setSelectedMoods((prev) =>
+                        prev.includes(mood) ? prev.filter((m) => m !== mood) : [...prev, mood]
+                      )
+                    }
+                  />
+                ))}
               </div>
             </motion.div>
           )}
@@ -137,7 +142,7 @@ export default function SparkPage() {
               className="absolute inset-0 flex flex-col items-center justify-center px-8">
               <p className="font-display text-3xl text-ink/25 italic text-center leading-snug
                             animate-[pulse-soft_1.8s_ease-in-out_infinite]">
-                finding the scene...
+                {t.spark.loadingText}
               </p>
             </motion.div>
           )}
@@ -147,7 +152,7 @@ export default function SparkPage() {
             <motion.div key="error" {...fade}
               className="absolute inset-0 flex flex-col items-center justify-center px-8">
               <p className="font-body text-xs text-burnt-orange/80 text-center leading-relaxed">
-                Couldn&apos;t reach the API. Check your GROQ_API_KEY and try again.
+                {t.spark.errorText}
               </p>
             </motion.div>
           )}
@@ -174,7 +179,7 @@ export default function SparkPage() {
                   {/* Session annotation */}
                   <div className="border-t border-ink/[0.08] mt-4 mb-3" />
                   <span className="font-body text-[9px] tracking-[0.25em] uppercase text-ink-muted/40">
-                    Session 01 · Scene {sceneNumber}
+                    {t.spark.sessionPrefix} {sceneNumber}
                   </span>
 
                   {history.length > 1 && (
@@ -233,7 +238,7 @@ export default function SparkPage() {
               className="block w-full text-center font-body text-[10px] tracking-widest
                          uppercase text-ink-muted/50 mb-3 active:opacity-60 transition-opacity"
             >
-              + compose the scene
+              {t.spark.composeLink}
             </motion.button>
           )}
         </AnimatePresence>
@@ -247,7 +252,7 @@ export default function SparkPage() {
               className="flex-1 border border-ink/15 text-ink/70 rounded-full px-5 py-2.5
                          font-body text-xs tracking-wide active:scale-95 transition-all duration-100"
             >
-              Shift it
+              {t.spark.shiftBtn}
             </button>
             <button
               type="button"
@@ -257,7 +262,7 @@ export default function SparkPage() {
                          font-body text-xs tracking-wide active:scale-95 transition-all duration-100
                          disabled:opacity-40 disabled:cursor-default"
             >
-              {isSaved ? "Kept ✓" : "Keep it"}
+              {isSaved ? t.spark.keptBtn : t.spark.keepBtn}
             </button>
           </div>
         )}
@@ -268,10 +273,10 @@ export default function SparkPage() {
           isLoading={screen === "loading"}
           className="w-full !py-3.5"
         >
-          {screen === "loading"    ? "Sparking"
-           : screen === "generated" ? "Spark another"
-           : screen === "error"     ? "Try again"
-           : "Spark an idea"}
+          {screen === "loading"    ? t.spark.sparkingBtn
+           : screen === "generated" ? t.spark.sparkAnotherBtn
+           : screen === "error"     ? t.spark.tryAgainBtn
+           : t.spark.sparkBtn}
         </PrimaryButton>
       </div>
 

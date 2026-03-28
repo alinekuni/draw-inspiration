@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useAppContext } from "@/lib/AppContext";
 import { motion } from "framer-motion";
 import clsx from "clsx";
+import { useTranslation } from "@/i18n";
 
 const FILTERS = ["ALL", "LIGHT", "FIGURE", "PLACE", "TIME", "MEMORY", "TENSION", "QUIET", "MYTH"] as const;
 type Filter = (typeof FILTERS)[number];
@@ -93,6 +94,7 @@ const BOARDS: Board[] = [
 
 export default function ReferencesPage() {
   const { activeBoardId, setActiveBoardId, setSelectedStyleChips } = useAppContext();
+  const { t } = useTranslation();
   const [activeFilter, setActiveFilter] = useState<Filter>("ALL");
 
   const visible = activeFilter === "ALL" ? BOARDS : BOARDS.filter((b) => b.category === activeFilter);
@@ -113,10 +115,10 @@ export default function ReferencesPage() {
       {/* Header */}
       <div className="flex-shrink-0 px-5 pt-5 pb-1">
         <p className="font-body text-[10px] tracking-[0.2em] uppercase text-ink-muted">
-          Draw from
+          {t.references.header}
         </p>
         <p className="font-display italic text-[13px] text-ink/35 mt-0.5">
-          moods worth sitting with
+          {t.references.subheader}
         </p>
       </div>
 
@@ -139,7 +141,7 @@ export default function ReferencesPage() {
                 isActive ? "text-ink" : "text-ink/30 hover:text-ink/50"
               )}
             >
-              {f}
+              {f === "ALL" ? t.references.allFilter : (t.references.categories[f] ?? f)}
               {isActive && (
                 <motion.div
                   layoutId="ref-tab-underline"
@@ -169,7 +171,7 @@ export default function ReferencesPage() {
             >
               {/* Category label */}
               <p className="font-body text-[8px] tracking-[0.2em] uppercase text-ink/25 mb-1">
-                {board.category}
+                {t.references.categories[board.category] ?? board.category}
               </p>
 
               {/* Name + verse */}

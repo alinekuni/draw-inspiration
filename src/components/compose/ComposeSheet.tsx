@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import clsx from "clsx";
+import { useTranslation } from "@/i18n";
 
 const CATEGORIES = ["MOOD", "SUBJECT", "STYLE", "CONSTRAINT", "TWIST"] as const;
 type Category = (typeof CATEGORIES)[number];
@@ -26,6 +27,7 @@ interface ComposeSheetProps {
 }
 
 export default function ComposeSheet({ isOpen, onClose, onDone }: ComposeSheetProps) {
+  const { t } = useTranslation();
   const [activeCategory, setActiveCategory] = useState<Category>("MOOD");
   const [selections, setSelections] = useState<Record<Category, string[]>>(EMPTY);
 
@@ -80,7 +82,7 @@ export default function ComposeSheet({ isOpen, onClose, onDone }: ComposeSheetPr
             {/* Header */}
             <div className="px-5 pt-3 pb-2 flex justify-between items-baseline">
               <span className="font-body text-[10px] tracking-[0.18em] uppercase text-ink/40">
-                Compose the scene
+                {t.compose.title}
               </span>
               <button
                 type="button"
@@ -88,7 +90,7 @@ export default function ComposeSheet({ isOpen, onClose, onDone }: ComposeSheetPr
                 className="font-body text-[10px] tracking-[0.12em] uppercase text-ink/70
                            hover:text-ink transition-colors active:opacity-60 font-medium"
               >
-                done
+                {t.compose.doneBtn}
               </button>
             </div>
 
@@ -112,7 +114,7 @@ export default function ComposeSheet({ isOpen, onClose, onDone }: ComposeSheetPr
                       isActive ? "text-ink" : "text-ink/30"
                     )}
                   >
-                    {cat}
+                    {t.compose.categories[cat] ?? cat}
                     {count > 0 && (
                       <span className={clsx(
                         "ml-1.5 inline-flex items-center justify-center w-3.5 h-3.5 rounded-full text-[8px] font-medium",

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "@/i18n";
 import type { GeneratedPrompt, PromptBreakdown } from "@/types";
 
 interface PromptCardProps {
@@ -13,18 +14,19 @@ interface PromptCardProps {
   onEditCompose?: () => void;
 }
 
-const BREAKDOWN_ROWS: { key: keyof PromptBreakdown; label: string }[] = [
-  { key: "subject",     label: "Subject"     },
-  { key: "environment", label: "Environment" },
-  { key: "mood",        label: "Mood"        },
-  { key: "lighting",    label: "Lighting"    },
-  { key: "twist",       label: "Twist"       },
+const BREAKDOWN_ORDER: (keyof PromptBreakdown)[] = [
+  "subject", "environment", "mood", "lighting", "twist",
 ];
 
 export default function PromptCard({ prompt, onDelete, onShare, composeUsed, onEditCompose }: PromptCardProps) {
+  const { t } = useTranslation();
   const [copied,   setCopied]   = useState(false);
   const [shared,   setShared]   = useState(false);
   const [expanded, setExpanded] = useState(false);
+
+  const breakdownRows = BREAKDOWN_ORDER
+    .filter((key) => prompt.breakdown[key])
+    .map((key) => ({ key, label: t.promptCard.breakdown[key as keyof typeof t.promptCard.breakdown] }));
 
   const handleCopy = () => {
     navigator.clipboard.writeText(prompt.prompt);
@@ -69,7 +71,7 @@ export default function PromptCard({ prompt, onDelete, onShare, composeUsed, onE
 
         {/* Label */}
         <p className="font-body text-[9px] tracking-[0.2em] uppercase text-ink-muted/40 mb-3">
-          your scene
+          {t.promptCard.label}
         </p>
 
         {/* Title */}
@@ -99,7 +101,7 @@ export default function PromptCard({ prompt, onDelete, onShare, composeUsed, onE
         {prompt.breakdown.constraint && (
           <div className="mt-4 rounded-lg bg-burnt-orange/[0.07] border border-burnt-orange/[0.12] px-3.5 py-2.5">
             <p className="font-body text-[9px] tracking-[0.2em] uppercase text-burnt-orange/70 font-medium mb-0.5">
-              constraint
+              {t.promptCard.constraintLabel}
             </p>
             <p className="font-body text-[12px] text-ink/75 leading-snug">
               {prompt.breakdown.constraint}
@@ -112,7 +114,7 @@ export default function PromptCard({ prompt, onDelete, onShare, composeUsed, onE
           <div className="mt-4 pt-3 border-t border-ink/[0.06]">
             <div className="flex items-center justify-between mb-2">
               <p className="font-body text-[8px] tracking-[0.2em] uppercase text-ink/25">
-                composed with
+                {t.promptCard.composedWith}
               </p>
               {onEditCompose && (
                 <button
@@ -121,7 +123,7 @@ export default function PromptCard({ prompt, onDelete, onShare, composeUsed, onE
                   className="font-body text-[8px] tracking-[0.15em] uppercase
                              text-ink/30 hover:text-ink/60 transition-colors active:opacity-60"
                 >
-                  edit
+                  {t.promptCard.editBtn}
                 </button>
               )}
             </div>
@@ -148,7 +150,7 @@ export default function PromptCard({ prompt, onDelete, onShare, composeUsed, onE
                      uppercase text-ink/25 hover:text-ink/50 transition-colors duration-150 active:opacity-60"
           aria-expanded={expanded}
         >
-          breakdown
+          {t.promptCard.breakdownBtn}
           <motion.span
             animate={{ rotate: expanded ? 180 : 0 }}
             transition={{ duration: 0.2 }}
@@ -170,19 +172,17 @@ export default function PromptCard({ prompt, onDelete, onShare, composeUsed, onE
               className="overflow-hidden"
             >
               <div className="border-t border-ink/[0.07] mt-3 pt-3 space-y-2.5">
-                {BREAKDOWN_ROWS.map(({ key, label }) =>
-                  prompt.breakdown[key] ? (
-                    <div key={key} className="flex items-baseline gap-3">
-                      <span className="w-[72px] shrink-0 font-body text-[9px] tracking-[0.15em]
-                                       uppercase text-ink/30">
-                        {label}
-                      </span>
-                      <span className="font-body text-[12px] text-ink/70 leading-snug">
-                        {prompt.breakdown[key]}
-                      </span>
-                    </div>
-                  ) : null
-                )}
+                {breakdownRows.map(({ key, label }) => (
+                  <div key={key} className="flex items-baseline gap-3">
+                    <span className="w-[72px] shrink-0 font-body text-[9px] tracking-[0.15em]
+                                     uppercase text-ink/30">
+                      {label}
+                    </span>
+                    <span className="font-body text-[12px] text-ink/70 leading-snug">
+                      {prompt.breakdown[key]}
+                    </span>
+                  </div>
+                ))}
               </div>
             </motion.div>
           )}
