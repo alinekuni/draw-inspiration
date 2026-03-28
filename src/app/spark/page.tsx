@@ -202,7 +202,6 @@ export default function SparkPage() {
                 >
                   <PromptCard
                     prompt={currentPrompt}
-                    onShare={handleShare}
                     composeUsed={currentCompose ?? undefined}
                     onEditCompose={() => setSheetOpen(true)}
                   />
