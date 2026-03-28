@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAppContext } from "@/lib/AppContext";
 import { saveMoodBoard } from "@/lib/storage";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import clsx from "clsx";
 import { useTranslation } from "@/i18n";
 import type { MoodBoard } from "@/types";
@@ -93,28 +93,17 @@ const BOARDS: Board[] = [
 ];
 
 export default function ReferencesPage() {
-  const { activeBoardId, setActiveBoardId, setSelectedStyleChips, showToast, setInspirationBoardId } = useAppContext();
+  const { showToast, setInspirationBoardId, setSelectedStyleChips } = useAppContext();
   const { t } = useTranslation();
   const router = useRouter();
   const [activeFilter, setActiveFilter] = useState<Filter>("ALL");
+  const [expandedId, setExpandedId]     = useState<string | null>(null);
 
   const visible = activeFilter === "ALL" ? BOARDS : BOARDS.filter((b) => b.category === activeFilter);
 
-  const handleSelect = (board: Board) => {
-    if (activeBoardId === board.id) {
-      setActiveBoardId(null);
-      setSelectedStyleChips([]);
-      showToast("Style cleared", "info");
-    } else {
-      setActiveBoardId(board.id);
-      setSelectedStyleChips(board.chips);
-      showToast("Added to style", "success");
-    }
-  };
-
   const handleKeepBoard = (board: Board) => {
     const moodBoard: MoodBoard = {
-      type: "mood-board",
+      type:     "mood-board",
       id:       board.id,
       boardId:  board.id,
       category: board.category,
@@ -123,8 +112,6 @@ export default function ReferencesPage() {
     };
     saveMoodBoard(moodBoard);
     showToast(t.references.savedToInspiration, "success");
-    setActiveBoardId(null);
-    setSelectedStyleChips([]);
   };
 
   const handleSparkBoard = (board: Board) => {
@@ -138,26 +125,12 @@ export default function ReferencesPage() {
 
       {/* Header */}
       <div className="flex-shrink-0 px-5 pt-5 pb-1">
-        <div className="flex items-baseline justify-between">
-          <div>
-            <p className="font-body text-[10px] tracking-[0.2em] uppercase text-ink-muted">
-              {t.references.header}
-            </p>
-            <p className="font-display italic text-[13px] text-ink/35 mt-0.5">
-              {t.references.subheader}
-            </p>
-          </div>
-          {activeBoardId && (
-            <span className="font-body text-[9px] tracking-[0.12em] uppercase text-ink/40">
-              1 selected
-            </span>
-          )}
-        </div>
-        {activeBoardId && (
-          <p className="font-body text-[11px] text-ink/50 mt-2 leading-snug">
-            Selected styles will apply to your next prompt
-          </p>
-        )}
+        <p className="font-body text-[10px] tracking-[0.2em] uppercase text-ink-muted">
+          {t.references.header}
+        </p>
+        <p className="font-display italic text-[13px] text-ink/35 mt-0.5">
+          {t.references.subheader}
+        </p>
       </div>
 
       {/* Filter tabs */}
@@ -195,90 +168,112 @@ export default function ReferencesPage() {
       {/* List */}
       <div className="flex-1 overflow-y-auto px-5 pt-4 pb-6 space-y-3">
         {visible.map((board) => {
-          const isActive = board.id === activeBoardId;
+          const isExpanded = board.id === expandedId;
           const tBoard = t.references.boards[board.id];
           return (
-            <button
+            <div
               key={board.id}
-              type="button"
-              onClick={() => handleSelect(board)}
-              className={clsx(
-                "w-full bg-paper border border-ink/[0.08] rounded-2xl p-4 text-left",
-                "transition-all duration-150 active:scale-[0.985]",
-                "relative",
-                isActive ? "shadow-card-lg ring-1 ring-ink/20" : "shadow-card"
-              )}
+              className="bg-paper border border-ink/[0.08] rounded-2xl shadow-card overflow-hidden"
             >
-              {/* Selected indicator */}
-              {isActive && (
-                <div className="absolute top-3 right-3 w-5 h-5 rounded-full border border-ink/40 flex items-center justify-center bg-paper">
-                  <span className="text-ink text-sm">✓</span>
-                </div>
-              )}
-
-              {/* Category label */}
-              <p className="font-body text-[9px] tracking-[0.2em] uppercase text-ink/35 mb-1">
-                {t.references.categories[board.category] ?? board.category}
-              </p>
-
-              {/* Name + verse */}
-              <p className="font-display text-[17px] text-ink leading-tight pr-6">
-                {tBoard?.name}
-              </p>
-              <p className="font-body text-[12px] text-ink/50 italic leading-snug mt-0.5">
-                {tBoard?.verse}
-              </p>
-
-              {/* Invitation + actions — only visible when active */}
-              {isActive && (
-                <>
-                  <p className="font-body text-[13px] text-ink/65 leading-relaxed mt-3">
-                    {tBoard?.invitation}
+              {/* ── Card main row ── */}
+              <button
+                type="button"
+                onClick={() => setExpandedId(isExpanded ? null : board.id)}
+                className="w-full text-left p-4 active:opacity-75 transition-opacity"
+              >
+                {/* Top row: category label + icon buttons */}
+                <div className="flex items-center justify-between mb-1">
+                  <p className="font-body text-[9px] tracking-[0.2em] uppercase text-ink/35">
+                    {t.references.categories[board.category] ?? board.category}
                   </p>
-                  <div className="flex gap-2 mt-4 pt-3 border-t border-ink/[0.06]"
-                    onClick={(e) => e.stopPropagation()}>
+                  {/* Circle icon buttons — stop propagation */}
+                  <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
                     <button
                       type="button"
                       onClick={() => handleKeepBoard(board)}
-                      className="flex-1 rounded-full border border-ink/20 py-2
-                                 font-body text-[10px] tracking-[0.12em] uppercase text-ink/50
-                                 hover:text-ink/70 hover:border-ink/35 transition-colors active:scale-95"
+                      aria-label={t.references.keepBtn}
+                      className="w-7 h-7 rounded-full border border-ink/15 flex items-center justify-center
+                                 text-ink/35 hover:text-ink/65 hover:border-ink/30
+                                 transition-colors active:scale-90"
                     >
-                      {t.references.keepBtn}
+                      <BookmarkIcon />
                     </button>
                     <button
                       type="button"
                       onClick={() => handleSparkBoard(board)}
-                      className="flex-1 rounded-full bg-ink py-2
-                                 font-body text-[10px] tracking-[0.12em] uppercase text-paper
-                                 hover:opacity-85 transition-opacity active:scale-95"
+                      aria-label={t.references.sparkBtn}
+                      className="w-7 h-7 rounded-full border border-ink/15 flex items-center justify-center
+                                 text-ink/35 hover:text-ink/65 hover:border-ink/30
+                                 transition-colors active:scale-90"
                     >
-                      {t.references.sparkBtn}
+                      <ArrowIcon />
                     </button>
                   </div>
-                </>
-              )}
+                </div>
 
-              {/* Chips — passive label styling */}
-              <div className="flex flex-wrap gap-1.5 mt-3">
-                {board.chips.map((chip) => (
-                  <span
-                    key={chip}
-                    className={clsx(
-                      "rounded-full px-2 py-0.5",
-                      "font-body text-[8px] tracking-[0.1em] uppercase",
-                      isActive ? "text-ink/50 bg-ink/5" : "text-ink/30 bg-ink/2"
-                    )}
+                {/* Name + verse */}
+                <p className="font-display text-[17px] text-ink leading-tight">
+                  {tBoard?.name}
+                </p>
+                <p className="font-body text-[12px] text-ink/50 italic leading-snug mt-0.5">
+                  {tBoard?.verse}
+                </p>
+
+                {/* Chips */}
+                <div className="flex flex-wrap gap-1.5 mt-3">
+                  {board.chips.map((chip) => (
+                    <span
+                      key={chip}
+                      className="rounded-full px-2 py-0.5 font-body text-[8px] tracking-[0.1em]
+                                 uppercase text-ink/30 bg-ink/[0.02]"
+                    >
+                      {chip}
+                    </span>
+                  ))}
+                </div>
+              </button>
+
+              {/* ── Invitation (expanded) ── */}
+              <AnimatePresence initial={false}>
+                {isExpanded && tBoard?.invitation && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.22, ease: "easeInOut" }}
+                    className="overflow-hidden"
                   >
-                    {chip}
-                  </span>
-                ))}
-              </div>
-            </button>
+                    <div className="border-t border-ink/[0.06] px-4 py-4">
+                      <p className="font-body text-[13px] text-ink/65 leading-relaxed">
+                        {tBoard.invitation}
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           );
         })}
       </div>
 
     </div>
+  );
+}
+
+function BookmarkIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+      <path d="M2.5 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 .5.5v8.5L6 8.5 2.5 10.5V2Z"
+        stroke="currentColor" strokeWidth="1.15" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function ArrowIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+      <path d="M2 6h8M7 3l3 3-3 3"
+        stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
