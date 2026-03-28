@@ -274,7 +274,7 @@ function CloseIcon() {
 
 function ClockIcon() {
   return (
-    <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 12 12" fill="none" aria-hidden="true">
       <circle cx="6" cy="6" r="4.75" stroke="currentColor" strokeWidth="1.25" />
       <path d="M6 3.5V6l1.75 1.75" stroke="currentColor" strokeWidth="1.25"
         strokeLinecap="round" strokeLinejoin="round" />
@@ -284,7 +284,7 @@ function ClockIcon() {
 
 function PlayIcon() {
   return (
-    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 15 15" fill="none" aria-hidden="true">
       <path d="M3.5 2.5l8 5-8 5v-10z" fill="currentColor" />
     </svg>
   );
@@ -292,7 +292,7 @@ function PlayIcon() {
 
 function PauseIcon() {
   return (
-    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 15 15" fill="none" aria-hidden="true">
       <rect x="2.5" y="2.5" width="3.5" height="10" rx="1" fill="currentColor" />
       <rect x="9" y="2.5" width="3.5" height="10" rx="1" fill="currentColor" />
     </svg>

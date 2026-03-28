@@ -37,7 +37,7 @@ export default function HistoryNav({ index, total, onPrev, onNext }: HistoryNavP
 
 function ChevronLeft() {
   return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 18 18" fill="none" aria-hidden="true">
       <path d="M11 4.5L6.5 9l4.5 4.5" stroke="currentColor" strokeWidth="1.5"
         strokeLinecap="round" strokeLinejoin="round" />
     </svg>
@@ -46,7 +46,7 @@ function ChevronLeft() {
 
 function ChevronRight() {
   return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 18 18" fill="none" aria-hidden="true">
       <path d="M7 4.5L11.5 9 7 13.5" stroke="currentColor" strokeWidth="1.5"
         strokeLinecap="round" strokeLinejoin="round" />
     </svg>
