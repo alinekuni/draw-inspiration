@@ -1,36 +1,129 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Draw Inspiration
 
-## Getting Started
+A mobile-first web app that generates rich, multi-layered drawing prompts powered by AI.
 
-First, run the development server:
+Not just "draw a cat" — but: *"A night-shift lighthouse keeper who catalogues ships that never arrive, standing at a fogged window while a candle burns low."*
+
+---
+
+## What it does
+
+- **Spark** — one tap generates a cinematic drawing prompt with title, body, mood chips, and a full breakdown (subject, environment, mood, lighting, twist)
+- **Compose** — optionally guide the generator by selecting mood, subject, style, constraint, and twist before sparking
+- **References** — 56 curated style boards (light, figure, place, time, memory, tension, quiet, myth) that inject visual vocabulary into your prompts
+- **Keeps** — save prompts you love, attach your drawings as photos, and export your collection as JSON
+- **Share** — share any prompt as a URL (no account needed — the prompt is encoded in the link)
+- **Languages** — full English and Brazilian Portuguese support; switching language re-generates the current prompt in the new language
+- **Dark mode** — system preference detected on load, manual toggle persists to localStorage
+
+---
+
+## Stack
+
+| Layer | Choice |
+|-------|--------|
+| Framework | Next.js 14 (App Router, TypeScript strict) |
+| Styling | Tailwind CSS with custom earthy design tokens |
+| Animation | Framer Motion |
+| AI | Groq API — `llama-3.3-70b-versatile` |
+| Persistence | localStorage (no database) |
+| Deployment | Vercel |
+
+---
+
+## Design language
+
+Physical creative folder / binder metaphor. Everything feels like paper, ink, and texture.
+
+- **Palette:** paper `#F5F0E8` · ink `#1A1814` · olive `#5C6B3A` · burnt-orange `#C4622D` · muted-yellow `#D4A843`
+- **Dark mode:** CSS custom properties swap the palette without any component changes
+- **Fonts:** Instrument Serif (display/titles) + Inter (body)
+- **Chips:** uppercase, letter-spaced, pill shape
+- **Motion:** soft fades, height animations, layout transitions via Framer Motion
+
+---
+
+## Project structure
+
+```
+src/
+  app/
+    spark/          # Main prompt generation screen
+    references/     # Style board browser
+    prompts/        # Saved keeps collection
+    s/              # Share landing page (/s?d=<encoded>)
+    api/generate/   # Groq API route
+    layout.tsx      # Root layout with anti-flash dark mode script
+    providers.tsx   # AppProvider + I18nProvider
+  components/
+    compose/        # ComposeSheet (guided prompt builder)
+    generate/       # PromptCard, HistoryNav
+    keeps/          # KeepCard (with photo upload)
+    layout/         # BottomNav, ThemeToggle, LanguageToggle
+    ui/             # Chip, PrimaryButton, Toast
+  i18n/
+    en.ts           # English translations
+    pt-BR.ts        # Brazilian Portuguese translations
+    types.ts        # TranslationNamespace type
+    index.tsx       # I18nProvider + useTranslation hook
+  lib/
+    AppContext.tsx   # Global app state
+    gemini.ts       # API client (fetch wrapper for /api/generate)
+    storage.ts      # localStorage read/write helpers
+  types/
+    index.ts        # Shared TypeScript types
+```
+
+---
+
+## Getting started
+
+```bash
+npm install
+```
+
+Create `.env.local`:
+```
+GROQ_API_KEY=your_key_here
+```
+
+Get a free key at [console.groq.com](https://console.groq.com).
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deploying to Vercel
 
-## Learn More
+```bash
+npm install -g vercel
+vercel login
+vercel
+```
 
-To learn more about Next.js, take a look at the following resources:
+Add `GROQ_API_KEY` in the Vercel dashboard under Settings → Environment Variables, then:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+vercel --prod
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Development tools
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This project uses Claude Code with custom agents, skills, and commands in `.claude/`:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Type | Name | Purpose |
+|------|------|---------|
+| Agent | `code-reviewer` | Reviews diffs against project conventions |
+| Agent | `security-auditor` | Audits API routes and input handling |
+| Agent | `i18n-auditor` | Checks translation key parity across EN/PT-BR |
+| Agent | `accessibility-reviewer` | Reviews touch targets, contrast, ARIA |
+| Command | `/review` | Quick convention check on current session's changes |
+| Command | `/deploy` | Pre-flight checks + Vercel deploy |
+| Command | `/push` | tsc + lint + build + git push |
+| Command | `/fix-issue` | Minimal fix workflow |
