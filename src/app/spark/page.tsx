@@ -13,14 +13,6 @@ import { useTranslation } from "@/i18n";
 import { useAppContext } from "@/lib/AppContext";
 import type { GeneratedPrompt } from "@/types";
 
-function encodePromptForShare(data: GeneratedPrompt): string {
-  const json = JSON.stringify(data);
-  const bytes = new TextEncoder().encode(json);
-  let binary = "";
-  bytes.forEach((b) => { binary += String.fromCharCode(b); });
-  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
-}
-
 type ScreenState = "empty" | "loading" | "generated" | "error";
 
 const QUICK_MOODS = ["MELANCHOLIC", "PLAYFUL", "EERIE", "SERENE", "TENDER"];
@@ -94,13 +86,6 @@ export default function SparkPage() {
       : currentPrompt;
     savePrompt(toSave);
     setSavedIds((prev) => new Set(Array.from(prev).concat(currentPrompt.id)));
-  };
-
-  const handleShare = () => {
-    if (!currentPrompt) return;
-    const encoded = encodePromptForShare(currentPrompt);
-    const url = `${window.location.origin}/s?d=${encoded}`;
-    navigator.clipboard.writeText(url).catch(() => {});
   };
 
   // Pre-fill compose from inspiration board on mount
