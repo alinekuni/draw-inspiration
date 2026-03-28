@@ -20,7 +20,7 @@ that `tsc --noEmit` misses (missing env vars, import errors, etc.).
 
 ## Environment variable check
 
-Before deploying, confirm `GEMINI_API_KEY` is set in the Vercel project:
+Before deploying, confirm `GROQ_API_KEY` is set in the Vercel project:
 
 ```bash
 npx vercel env ls
@@ -28,7 +28,7 @@ npx vercel env ls
 
 If it's missing:
 ```bash
-npx vercel env add GEMINI_API_KEY production
+npx vercel env add GROQ_API_KEY production
 ```
 
 The app will build without the key but API calls will fail at runtime with a 500.
@@ -50,13 +50,14 @@ Vercel auto-deploys on push to `main`. Check the deployment status at vercel.com
 
 After deployment, manually verify:
 
-- [ ] `/generate` loads — tab bar visible, Generate button present
-- [ ] Tap "Generate idea" — calls `/api/generate`, returns a prompt card
-- [ ] Copy button copies prompt text to clipboard
-- [ ] Save button → switch to Saved tab → prompt appears
-- [ ] Style tab — select a board → switch to Generate — style chips pre-filled
-- [ ] Build tab — select chips → Build prompt — result appears
-- [ ] Focus mode — expand icon → full-screen overlay → Esc to dismiss
+- [ ] `/spark` loads — bottom nav visible, Spark button present
+- [ ] Tap "Spark" → prompt card appears with title and body text
+- [ ] Copy button copies prompt to clipboard
+- [ ] Keep button → switch to Keeps tab (`/prompts`) → prompt appears
+- [ ] `/references` → select a board → invitation text appears, chips shown
+- [ ] Language toggle (EN/PT) → new spark → prompt returns in Portuguese
+- [ ] Dark mode toggle → theme switches without white flash on reload
+- [ ] Share link → copy URL → open in new tab → `/s` route renders the prompt
 - [ ] No console errors on any tab
 
 ## Rollback
@@ -69,6 +70,6 @@ Or promote the previous deployment from the Vercel dashboard.
 
 ## What is NOT deployed
 
-- `.env.local` — never committed, never deployed (in .gitignore)
+- `.env.local` — never committed, never deployed (covered by `.gitignore`)
 - `.claude/` — dev tooling only
-- `rules/`, `CLAUDE.md` — documentation only
+- `CLAUDE.md`, `CLAUDE.local.md` — documentation only

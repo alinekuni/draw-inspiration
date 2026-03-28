@@ -1,4 +1,4 @@
-Review the code I've written or changed in this session. Check against the project's actual conventions (see `rules/code-style.md`).
+Review the code I've written or changed in this session. Check against the project's actual conventions.
 
 ## Checklist
 
@@ -10,9 +10,15 @@ Review the code I've written or changed in this session. Check against the proje
 
 **Styling**
 - Tailwind only — no inline `style={{}}`, no CSS Modules
-- Conditional classes go through `cn()` from `@/lib/utils`, never template literals
+- Conditional classes go through `clsx()` — never template literals
 - Custom colors use opacity modifier syntax: `text-ink/80`, `bg-olive/[0.04]`
 - Arbitrary values use brackets: `text-[10px]`, not fontSize inline style
+- No hardcoded hex colors that should be theme-aware — use `bg-canvas`, `bg-paper`, `text-ink`, `text-ink-muted`
+
+**i18n**
+- No hardcoded user-visible strings — all text from `useTranslation()`
+- Chip values stored/sent to API in English; display via `t.compose.chipLabels[chip] ?? chip`
+- New string keys added to `src/i18n/en.ts`, `src/i18n/pt-BR.ts`, and `src/i18n/types.ts`
 
 **Component structure**
 - `"use client"` is the literal first line of interactive components (no blank line above)
@@ -30,10 +36,11 @@ Review the code I've written or changed in this session. Check against the proje
 - Errors returned as `NextResponse.json({ error: string }, { status: N })`
 - AI output cleaned with `.replace(/```json\n?|\n?```/g, "").trim()` before `JSON.parse`
 - `id: crypto.randomUUID()` and `createdAt: Date.now()` assigned in the route, not the client
+- AI backend is Groq (`groq-sdk`), accessed only in `src/app/api/generate/route.ts`
 
 **Mobile-first**
 - Layout designed for 390px, no horizontal overflow
-- Touch targets are at least 44px tall (use `min-h-[44px]` or `py-2.5` on buttons)
-- iOS safe area handled with `.safe-area-bottom` class on fixed footers
+- Touch targets are at least 44px tall (`min-h-[44px]` or `py-2.5` on buttons)
+- iOS safe area handled on fixed footers
 
 For each issue, cite `file:line` and provide the corrected snippet.

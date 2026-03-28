@@ -1,13 +1,13 @@
 # Deploy Skill
 
-Deployment checklist and runbook for Draw Inspiration. This project deploys to Vercel (`.vercel` is in `.gitignore`, indicating Vercel CLI has been or will be used).
+Deployment checklist and runbook for Draw Inspiration. This project deploys to Vercel (`.vercel` is in `.gitignore`).
 
 ## Stack context
 
 - **Framework:** Next.js 14 — Vercel detects this automatically, no config needed
 - **Build command:** `next build` (via `npm run build`)
 - **Output:** `.next/` — standard Next.js output, not static export
-- **Environment:** Node.js serverless (API routes use `crypto.randomUUID()` and `@google/generative-ai`)
+- **AI backend:** Groq (`groq-sdk`, model `llama-3.3-70b-versatile`) — API route only
 - **No database** — nothing to migrate
 - **No CDN config** — assets served by Vercel edge network automatically
 
@@ -15,9 +15,9 @@ Deployment checklist and runbook for Draw Inspiration. This project deploys to V
 
 | Variable | Where set | Required for |
 |----------|-----------|-------------|
-| `GEMINI_API_KEY` | Vercel dashboard → Settings → Environment Variables | All prompt generation |
+| `GROQ_API_KEY` | Vercel dashboard → Settings → Environment Variables | All prompt generation |
 
-No other env vars are needed. The app runs without the key but every generate/build call returns a 500.
+No other env vars are needed. The app builds without the key but every generate call returns a 500 at runtime.
 
 ## First-time Vercel setup
 
@@ -25,8 +25,8 @@ No other env vars are needed. The app runs without the key but every generate/bu
 npm install -g vercel      # install CLI once
 vercel login               # authenticate
 vercel link                # link this directory to a Vercel project
-vercel env add GEMINI_API_KEY production
-vercel env add GEMINI_API_KEY preview
+vercel env add GROQ_API_KEY production
+vercel env add GROQ_API_KEY preview
 ```
 
 ## Deployment checklist
@@ -37,7 +37,7 @@ vercel env add GEMINI_API_KEY preview
 - [ ] `npm run lint` passes (zero errors)
 - [ ] `npm run build` completes successfully
 - [ ] `git status` is clean — no uncommitted changes that shouldn't go to prod
-- [ ] No `.env.local` accidentally staged (`git diff --cached | grep GEMINI`)
+- [ ] No `.env.local` accidentally staged (`git diff --cached | grep GROQ`)
 
 ### Deploy
 
@@ -47,14 +47,19 @@ vercel env add GEMINI_API_KEY preview
 ### After deploy
 
 - [ ] Visit production URL — app loads without white screen
-- [ ] `/generate` → tap "Generate idea" → prompt appears (confirms API key is set)
-- [ ] `/saved` → save a prompt → reload → prompt persists (confirms localStorage)
+- [ ] `/spark` → tap "Spark" button → prompt card appears (confirms `GROQ_API_KEY` is set)
+- [ ] Copy button copies prompt text to clipboard
+- [ ] Keep button → switch to Keeps tab → prompt appears (confirms localStorage)
+- [ ] `/references` → select a board → board shows as selected with invitation text
+- [ ] Language toggle → switch to PT → new spark generates in Portuguese
+- [ ] Dark mode toggle → UI switches theme without flash
+- [ ] `/s?d=` (share URL) — copy a share link, open in new tab, prompt renders
 - [ ] Check Vercel Function logs for any 500s
 
 ## Vercel function limits (free tier)
 
 The `/api/generate` route runs as a Vercel Serverless Function:
-- Execution timeout: 10s (default) — Gemini calls typically complete in 1–3s ✓
+- Execution timeout: 10s (default) — Groq calls typically complete in 1–3s ✓
 - Memory: 1024 MB — well within range ✓
 - No rate limiting is implemented — consider adding if the app goes public
 

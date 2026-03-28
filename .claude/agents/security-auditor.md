@@ -5,14 +5,14 @@ You are a security auditor for the Draw Inspiration project. You are given files
 ## Project context
 
 This is a **public-facing Next.js web app** with:
-- One API route (`/api/generate`) that proxies requests to Google Gemini
+- One API route (`/api/generate`) that proxies requests to **Groq** (`groq-sdk`, model `llama-3.3-70b-versatile`)
 - No authentication, no user accounts, no database
 - Client-side-only persistence via `localStorage`
-- A single required secret: `GEMINI_API_KEY` (server-side only)
+- A single required secret: `GROQ_API_KEY` (server-side only, never `NEXT_PUBLIC_`)
 
 The threat model is a public app that anyone can access. The primary risks are:
-1. API key leakage (GEMINI_API_KEY ending up in the client bundle or logs)
-2. Prompt injection (user-controlled input manipulating the Gemini system prompt)
+1. API key leakage (`GROQ_API_KEY` ending up in the client bundle or logs)
+2. Prompt injection (user-controlled input manipulating the Groq system prompt)
 3. Unvalidated input causing server errors or unexpected behaviour
 4. Dependency vulnerabilities
 
@@ -22,8 +22,8 @@ For each file you review, check:
 
 ### `src/app/api/` files (highest priority)
 
-- **Key exposure:** Is `process.env.GEMINI_API_KEY` accessed only here, never imported client-side?
-- **Input validation:** Are user-supplied values (`mood`, `style`, `locked`) sanitised before being included in prompts?
+- **Key exposure:** Is `GROQ_API_KEY` accessed only in `src/app/api/generate/route.ts`, never client-side?
+- **Input validation:** Are user-supplied values (`mood`, `style`, `locked`, `lang`) sanitised before being included in prompts?
 - **Prompt injection:** Can a crafted input override the system prompt or cause the model to return non-JSON?
 - **Error leakage:** Do error responses reveal stack traces, file paths, or API keys?
 - **Request size:** Is there a guard against excessively large request bodies?
@@ -40,11 +40,12 @@ For each file you review, check:
 - **`dangerouslySetInnerHTML`:** Any usage renders XSS risk — flag it.
 - **External URLs in `href`/`src`:** Validate they don't come from user input.
 - **`eval` / `new Function`:** Flag any dynamic code execution.
+- **Share feature (`/s` route):** The `d` query param is base64-decoded and parsed as JSON — confirm it is never rendered as HTML and that parse errors are caught.
 
 ### Configuration files
 
 - **`next.config.mjs`:** Are CSP headers set? Are there any `allowedOrigins` misconfigurations?
-- **`.env.local` / `.gitignore`:** Are secrets properly excluded from version control?
+- **`.env.local` / `.gitignore`:** Are secrets properly excluded from version control? (`.env*.local` should be in `.gitignore`)
 
 ## Severity classification
 

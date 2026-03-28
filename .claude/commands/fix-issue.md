@@ -17,9 +17,9 @@ Fix the issue described in $ARGUMENTS.
    - Run `npm run lint` — must complete clean
    - If the fix touches the API route, test with curl:
      ```bash
-     curl -X POST http://localhost:3001/api/generate \
+     curl -X POST http://localhost:3000/api/generate \
        -H "Content-Type: application/json" \
-       -d '{"mood": ["melancholic"]}'
+       -d '{"mood": ["melancholic"], "lang": "en"}'
      ```
 
 4. **Summarise**
