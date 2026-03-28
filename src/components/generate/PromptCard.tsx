@@ -135,7 +135,7 @@ export default function PromptCard({ prompt, onDelete, onShare, composeUsed, onE
                              px-2 py-0.5 font-body text-[9px] tracking-[0.08em]
                              uppercase text-ink/50"
                 >
-                  {chip}
+                  {t.compose.chipLabels[chip] ?? chip}
                 </span>
               ))}
             </div>

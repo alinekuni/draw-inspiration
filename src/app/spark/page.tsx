@@ -214,7 +214,7 @@ export default function SparkPage() {
             >
               <p className="flex-1 min-w-0 font-body text-[9px] tracking-[0.12em] uppercase
                              text-ink/40 truncate">
-                {composeFlat.join(" · ")}
+                {composeFlat.map((chip) => t.compose.chipLabels[chip] ?? chip).join(" · ")}
               </p>
               <button
                 type="button"

@@ -152,7 +152,7 @@ export default function ComposeSheet({ isOpen, onClose, onDone }: ComposeSheetPr
                         : "border border-ink/25 text-ink/60"
                     )}
                   >
-                    {chip}
+                    {t.compose.chipLabels[chip] ?? chip}
                   </button>
                 );
               })}
