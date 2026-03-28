@@ -195,7 +195,7 @@ export default function PromptCard({ prompt, onDelete, onShare, composeUsed, onE
 
 function ShareIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
       <circle cx="11" cy="2.5" r="1.5" stroke="currentColor" strokeWidth="1.2" />
       <circle cx="11" cy="11.5" r="1.5" stroke="currentColor" strokeWidth="1.2" />
       <circle cx="3"  cy="7"   r="1.5" stroke="currentColor" strokeWidth="1.2" />
@@ -207,7 +207,7 @@ function ShareIcon() {
 
 function CopyIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
       <rect x="5" y="5" width="8" height="8" rx="1.25" stroke="currentColor" strokeWidth="1.25" />
       <path d="M3 10H2.5A1.5 1.5 0 0 1 1 8.5v-6A1.5 1.5 0 0 1 2.5 1h6A1.5 1.5 0 0 1 10 2.5V3"
         stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />
@@ -217,7 +217,7 @@ function CopyIcon() {
 
 function CheckIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
       <path d="M3 7.5L6.5 11L12 4.5" stroke="currentColor" strokeWidth="1.5"
         strokeLinecap="round" strokeLinejoin="round" className="text-olive" />
     </svg>
@@ -226,7 +226,7 @@ function CheckIcon() {
 
 function TrashIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
       <path d="M2 3.5h10M5.5 3.5V2.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1M5 3.5l.5 7M9 3.5l-.5 7"
         stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
       <rect x="2.5" y="3.5" width="9" height="8" rx="1" stroke="currentColor" strokeWidth="1.25" />

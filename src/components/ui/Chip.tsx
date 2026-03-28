@@ -51,7 +51,7 @@ export function Chip({ label, variant = "default", onClick, className }: ChipPro
 
 function LockIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 12 12" fill="none" aria-hidden="true" className="shrink-0">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" className="shrink-0">
       <rect x="1.5" y="5.5" width="9" height="6" rx="1.25" stroke="currentColor" strokeWidth="1.25" />
       <path d="M3.5 5.5V4a2.5 2.5 0 0 1 5 0v1.5"
         stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />

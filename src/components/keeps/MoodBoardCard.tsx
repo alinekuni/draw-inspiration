@@ -104,7 +104,7 @@ export default function MoodBoardCard({ board, onSpark, onDelete }: MoodBoardCar
 
 function ArrowIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
       <path d="M2 6h8M7 3l3 3-3 3"
         stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
@@ -113,7 +113,7 @@ function ArrowIcon() {
 
 function TrashIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 11 11" fill="none" aria-hidden="true">
+    <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true">
       <path d="M1.5 2.75h8M4.5 2.75V2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v.75M4 2.75l.5 5.5M7 2.75l-.5 5.5"
         stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" />
       <rect x="2" y="2.75" width="7" height="6" rx=".75"

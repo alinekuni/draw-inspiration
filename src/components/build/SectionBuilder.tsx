@@ -104,7 +104,7 @@ export default function SectionBuilder({
 
 function LockIcon({ locked }: { locked: boolean }) {
   return (
-    <svg width="20" height="20" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+    <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true">
       <rect
         x="2" y="6" width="10" height="7" rx="1.5"
         stroke="currentColor" strokeWidth="1.5"
