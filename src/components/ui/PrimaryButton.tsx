@@ -50,15 +50,15 @@ function LoadingDots() {
   return (
     <span className="inline-flex items-center gap-[3px]" aria-hidden="true">
       <span
-        className="w-[3px] h-[3px] rounded-full bg-white/60"
+        className="w-[3px] h-[3px] rounded-full bg-paper/60"
         style={{ animation: "dot-pulse 1.4s ease-in-out infinite", animationDelay: "0ms" }}
       />
       <span
-        className="w-[3px] h-[3px] rounded-full bg-white/60"
+        className="w-[3px] h-[3px] rounded-full bg-paper/60"
         style={{ animation: "dot-pulse 1.4s ease-in-out infinite", animationDelay: "200ms" }}
       />
       <span
-        className="w-[3px] h-[3px] rounded-full bg-white/60"
+        className="w-[3px] h-[3px] rounded-full bg-paper/60"
         style={{ animation: "dot-pulse 1.4s ease-in-out infinite", animationDelay: "400ms" }}
       />
     </span>
