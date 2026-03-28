@@ -47,15 +47,24 @@ Create these before writing significant code:
 ```
 .claude/
   agents/
-    code-reviewer.md     # project-specific conventions
-    security-auditor.md  # API key, input validation, etc.
+    code-reviewer.md       # project-specific conventions
+    security-auditor.md    # API key, input validation, etc.
+    ux-ui-specialist.md    # product feel, design language, copy tone
+    accessibility-reviewer.md
   commands/
-    review.md            # /review — quick convention check
-    push.md              # /push — tsc + lint + build + git push
-    fix-issue.md         # /fix-issue — minimal fix workflow
+    review.md              # /review — quick convention check
+    push.md                # /push — tsc + lint + build + git push
+    fix-issue.md           # /fix-issue — minimal fix workflow
 ```
 
 Copy from this project and update for your stack. The 30 minutes spent here compounds across every session.
+
+**Also install community plugins early:**
+```
+npx plugins add vercel/vercel-plugin   # deployment, env vars, logs
+```
+
+Plugins add pre-built agents, skills, and MCP integrations from tool providers. Check for a plugin before building custom tooling for platforms you use (Vercel, GitHub, Linear, etc.).
 
 ### 5. Write the core type definitions
 Before building UI, define the data shapes. Put them in `src/types/index.ts`. Even rough types are better than starting with `any`. The types are your contract — everything else implements against them.

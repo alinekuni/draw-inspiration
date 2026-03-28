@@ -151,3 +151,59 @@ Then filter before rendering: `.filter(([, v]) => v)`.
 These tools compound over time. The second project you start with a good `.claude/` setup from day one will go faster than this one did.
 
 **Use this on every project:** set up at least `code-reviewer`, `/review`, and `/push` before writing any significant code.
+
+---
+
+## Traceability: stamp origin at save time
+
+**The problem:** When a scene is sparked from a reference board, how do you later know which board inspired it? Displaying it is easy — tracking it requires the data to exist.
+
+**The solution:** Extend the `GeneratedPrompt` type with an optional `inspirationBoardId?: string`. When the user saves a prompt, check if a board is active in context and stamp it:
+
+```ts
+const toSave = inspirationBoardId
+  ? { ...currentPrompt, inspirationBoardId }
+  : currentPrompt;
+savePrompt(toSave);
+```
+
+This records the lineage at the moment of save — the only moment when you have both pieces of information. You can then display the board name anywhere by looking up `t.references.boards[keep.inspirationBoardId]`.
+
+**The general lesson:** Capture relationships between data at the point where they're created, not at the point where you want to display them. Adding it later means going back through saved data that has no trace.
+
+---
+
+## Security constants must actually be used
+
+**The problem:** `ALLOWED_CHARS = /^[\w\s,\-']+$/` was defined as a safety constraint on chip values going into the AI system prompt — but it was never called anywhere. The constant existed but provided no protection.
+
+**The fix:** Wire it into the sanitize function that processes chip values:
+```ts
+.filter((s) => ALLOWED_CHARS.test(s));
+```
+
+**The lesson:** A defined but unused security constraint is false confidence — it looks like protection in the code but provides none. ESLint's `no-unused-vars` caught this before production. Take unused variable warnings seriously, especially in input validation code.
+
+---
+
+## Icon visual grammar
+
+**The problem:** As new features are added, new icons get created. Without a shared grammar, the icon set fragments — different stroke weights, different sizes, different semantic meanings for similar shapes.
+
+**The solution:** Define and enforce a clear visual vocabulary:
+
+| Pattern | Meaning | Visual |
+|---|---|---|
+| Circle icon button `w-7 h-7 rounded-full border` | Persistent card action (always visible) | ○ |
+| Pill chip `rounded-full px-2 py-0.5` | Tag, label, state | pill |
+| Full-width ghost button `rounded-full px-5 py-2.5` | Secondary action | wide pill |
+| Black pill `PrimaryButton` | The one most important action | filled pill |
+
+Icon SVG rules for this project:
+- `stroke="currentColor"`, `fill="none"` (stroke-only)
+- `strokeWidth` between 1.1 and 1.25
+- `strokeLinecap="round"`, `strokeLinejoin="round"`
+- ViewBox `12×12` for card icons, `14–15×14–15` for larger buttons
+- `aria-hidden="true"` always
+
+When the same action exists on multiple screens (keep, delete, spark), the icon must be identical — same path, same viewBox. Visual consistency across screens is how users learn the interface without thinking.
