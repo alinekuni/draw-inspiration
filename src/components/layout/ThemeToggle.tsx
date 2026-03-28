@@ -33,7 +33,7 @@ export default function ThemeToggle() {
                  text-ink/25 hover:text-ink/55 transition-colors active:scale-90"
     >
       <span className="text-[13px] leading-none select-none">
-        {dark ? "○" : "●"}
+        {dark ? "●" : "○"}
       </span>
     </button>
   );

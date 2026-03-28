@@ -16,7 +16,7 @@ export default function LanguageToggle() {
                  text-ink/30 hover:text-ink/55 transition-colors active:scale-90"
     >
       <span className="font-body text-[9px] tracking-[0.12em] uppercase select-none">
-        {lang === "en" ? "PT" : "EN"}
+        {lang === "en" ? "EN" : "PT"}
       </span>
     </button>
   );
