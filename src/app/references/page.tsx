@@ -126,7 +126,7 @@ export default function ReferencesPage() {
     <div className="flex flex-col h-full bg-canvas">
 
       {/* Header */}
-      <div className="flex-shrink-0 px-5 pt-5 pb-1">
+      <div className="flex-shrink-0 px-5 pt-8 pb-4">
         <p className="font-body text-[10px] tracking-[0.2em] uppercase text-ink/50 mb-3">
           {t.references.header}
         </p>
@@ -137,7 +137,7 @@ export default function ReferencesPage() {
 
       {/* Filter tabs */}
       <div
-        className="flex-shrink-0 flex gap-0 px-5 mt-3 border-b border-ink/[0.07] overflow-x-auto"
+        className="flex-shrink-0 flex gap-0 px-5 mt-5 border-b border-ink/[0.07] overflow-x-auto"
         style={{ scrollbarWidth: "none" }}
       >
         {FILTERS.map((f) => {
