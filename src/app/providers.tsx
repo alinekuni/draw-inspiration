@@ -20,7 +20,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       </main>
       <ToastRenderer />
       {/* Spacer keeps main height correct; BottomNav is fixed and sits over it */}
-      <div className="h-16 flex-shrink-0" aria-hidden="true" />
+      <div className="h-16 flex-shrink-0" style={{ paddingBottom: "env(safe-area-inset-bottom)" }} aria-hidden="true" />
       <BottomNav />
     </AppProvider>
     </I18nProvider>
