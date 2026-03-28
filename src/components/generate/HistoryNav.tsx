@@ -13,12 +13,12 @@ export default function HistoryNav({ index, total, onPrev, onNext }: HistoryNavP
         onClick={onPrev}
         disabled={index === 0}
         aria-label="Previous scene"
-        className="text-ink/40 disabled:opacity-20 active:scale-90
-                   transition-all duration-100 hover:text-ink/70"
+        className="text-ink/55 disabled:opacity-20 active:scale-90
+                   transition-all duration-100 hover:text-ink/80"
       >
         <ChevronLeft />
       </button>
-      <span className="font-body text-[10px] text-ink/30 tracking-wide tabular-nums">
+      <span className="font-body text-[10px] text-ink/50 tracking-wide tabular-nums">
         {index + 1} / {total}
       </span>
       <button
@@ -26,8 +26,8 @@ export default function HistoryNav({ index, total, onPrev, onNext }: HistoryNavP
         onClick={onNext}
         disabled={index === total - 1}
         aria-label="Next scene"
-        className="text-ink/40 disabled:opacity-20 active:scale-90
-                   transition-all duration-100 hover:text-ink/70"
+        className="text-ink/55 disabled:opacity-20 active:scale-90
+                   transition-all duration-100 hover:text-ink/80"
       >
         <ChevronRight />
       </button>

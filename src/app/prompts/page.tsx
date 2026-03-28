@@ -74,19 +74,19 @@ export default function KeepsPage() {
 
       {/* ── About ── */}
       <div className="flex-shrink-0 px-5 pt-8 pb-6">
-        <p className="font-body text-[10px] tracking-[0.2em] uppercase text-ink/30 mb-3">
+        <p className="font-body text-[10px] tracking-[0.2em] uppercase text-ink/50 mb-3">
           {t.keeps.label} <span className="opacity-40">✦</span>
         </p>
         <h1 className="font-display italic text-[28px] text-ink/75 leading-[1.15]">
           {t.keeps.titleLine1}<br />{t.keeps.titleLine2}
         </h1>
-        <p className="font-body text-[12px] text-ink/45 leading-relaxed mt-4 max-w-[340px]">
+        <p className="font-body text-[12px] text-ink/65 leading-relaxed mt-4 max-w-[340px]">
           {t.keeps.p1}
         </p>
-        <p className="font-body text-[12px] text-ink/45 leading-relaxed mt-2 max-w-[340px]">
+        <p className="font-body text-[12px] text-ink/65 leading-relaxed mt-2 max-w-[340px]">
           {t.keeps.p2}
         </p>
-        <p className="font-body text-[12px] text-ink/45 leading-relaxed mt-2 max-w-[340px]">
+        <p className="font-body text-[12px] text-ink/65 leading-relaxed mt-2 max-w-[340px]">
           {t.keeps.p3}
         </p>
         <div className="mt-5">
@@ -116,7 +116,7 @@ export default function KeepsPage() {
                 "relative mr-6 pb-2.5 pt-0.5 whitespace-nowrap shrink-0",
                 "font-body text-[10px] tracking-[0.15em] uppercase",
                 "transition-colors duration-100",
-                isActive ? "text-ink" : "text-ink/30 hover:text-ink/50"
+                isActive ? "text-ink" : "text-ink/45 hover:text-ink/70"
               )}
             >
               {tab.label}
@@ -151,13 +151,13 @@ export default function KeepsPage() {
                 <div className="flex items-center gap-1.5 flex-wrap">
                   {mounted && keeps.length > 0 && (
                     <>
-                      <span className="font-body text-[9px] tracking-[0.12em] uppercase text-ink/25">
+                      <span className="font-body text-[9px] tracking-[0.12em] uppercase text-ink/45">
                         {keeps.length} {keeps.length === 1 ? t.keeps.sceneSingular : t.keeps.scenePlural}
                       </span>
                       {stats && stats.totalPhotos > 0 && (
                         <>
                           <span className="text-ink/15 text-[9px]">·</span>
-                          <span className="font-body text-[9px] tracking-[0.12em] uppercase text-ink/25">
+                          <span className="font-body text-[9px] tracking-[0.12em] uppercase text-ink/45">
                             {stats.totalPhotos} {stats.totalPhotos === 1 ? t.keeps.drawingSingular : t.keeps.drawingPlural}
                           </span>
                         </>
@@ -170,7 +170,7 @@ export default function KeepsPage() {
                     type="button"
                     onClick={handleExport}
                     aria-label={t.keeps.exportBtn}
-                    className="text-ink/25 hover:text-ink/55 transition-colors active:scale-90 active:opacity-60"
+                    className="text-ink/45 hover:text-ink/70 transition-colors active:scale-90 active:opacity-60"
                   >
                     <DownloadIcon />
                   </button>
@@ -180,10 +180,10 @@ export default function KeepsPage() {
               {!mounted ? null : keeps.length === 0 ? (
                 /* Empty state */
                 <div className="pt-10 flex flex-col items-center text-center px-4">
-                  <p className="font-display italic text-[26px] text-ink/20 leading-snug">
+                  <p className="font-display italic text-[26px] text-ink/35 leading-snug">
                     {t.keeps.emptyGeneratedTitle}
                   </p>
-                  <p className="font-body text-[11px] text-ink/30 leading-relaxed mt-3 max-w-[260px]">
+                  <p className="font-body text-[11px] text-ink/55 leading-relaxed mt-3 max-w-[260px]">
                     {t.keeps.emptyGeneratedHint}
                   </p>
                   <Link
@@ -229,10 +229,10 @@ export default function KeepsPage() {
               {!mounted ? null : moodBoards.length === 0 ? (
                 /* Empty state */
                 <div className="pt-10 flex flex-col items-center text-center px-4">
-                  <p className="font-display italic text-[26px] text-ink/20 leading-snug">
+                  <p className="font-display italic text-[26px] text-ink/35 leading-snug">
                     {t.keeps.emptyInspirationTitle}
                   </p>
-                  <p className="font-body text-[11px] text-ink/30 leading-relaxed mt-3 max-w-[260px]">
+                  <p className="font-body text-[11px] text-ink/55 leading-relaxed mt-3 max-w-[260px]">
                     {t.keeps.emptyInspirationHint}
                   </p>
                   <Link

@@ -33,7 +33,7 @@ export default function BottomNav() {
             className={clsx(
               "flex-1 flex flex-col items-center justify-center gap-0.5 relative",
               "transition-colors duration-150",
-              isActive ? "text-ink" : "text-ink/35"
+              isActive ? "text-ink" : "text-ink/50"
             )}
             aria-current={isActive ? "page" : undefined}
           >

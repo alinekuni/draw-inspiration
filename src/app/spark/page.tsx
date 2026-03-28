@@ -144,7 +144,7 @@ export default function SparkPage() {
           {screen === "empty" && (
             <motion.div key="empty" {...fade}
               className="absolute inset-0 flex flex-col items-center justify-center px-8">
-              <p className="font-display text-3xl text-ink/30 italic text-center leading-snug">
+              <p className="font-display text-3xl text-ink/45 italic text-center leading-snug">
                 {t.spark.emptyTitle}
               </p>
               <p className="font-body text-xs text-ink-muted/50 text-center mt-3 tracking-wide">
@@ -262,7 +262,7 @@ export default function SparkPage() {
               className="flex items-center gap-2 mb-3"
             >
               <p className="flex-1 min-w-0 font-body text-[9px] tracking-[0.12em] uppercase
-                             text-ink/40 truncate">
+                             text-ink/60 truncate">
                 {composeFlat.map((chip) => t.compose.chipLabels[chip] ?? chip).join(" · ")}
               </p>
               <button

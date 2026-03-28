@@ -53,7 +53,7 @@ export default function PromptCard({ prompt, onDelete, onShare, composeUsed, onE
         <div className="absolute top-4 right-4 flex items-center gap-2">
           {onShare && (
             <button type="button" onClick={handleShare} aria-label="Share scene"
-              className="text-ink/30 hover:text-ink/60 transition-colors duration-150 active:scale-90">
+              className="text-ink/45 hover:text-ink/70 transition-colors duration-150 active:scale-90">
               {shared ? <CheckIcon /> : <ShareIcon />}
             </button>
           )}
@@ -70,7 +70,7 @@ export default function PromptCard({ prompt, onDelete, onShare, composeUsed, onE
         </div>
 
         {/* Label */}
-        <p className="font-body text-[9px] tracking-[0.2em] uppercase text-ink-muted/40 mb-3">
+        <p className="font-body text-[9px] tracking-[0.2em] uppercase text-ink-muted/60 mb-3">
           {t.promptCard.label}
         </p>
 
@@ -113,7 +113,7 @@ export default function PromptCard({ prompt, onDelete, onShare, composeUsed, onE
         {composeUsed && composeUsed.length > 0 && (
           <div className="mt-4 pt-3 border-t border-ink/[0.06]">
             <div className="flex items-center justify-between mb-2">
-              <p className="font-body text-[8px] tracking-[0.2em] uppercase text-ink/25">
+              <p className="font-body text-[8px] tracking-[0.2em] uppercase text-ink/45">
                 {t.promptCard.composedWith}
               </p>
               {onEditCompose && (
@@ -121,7 +121,7 @@ export default function PromptCard({ prompt, onDelete, onShare, composeUsed, onE
                   type="button"
                   onClick={onEditCompose}
                   className="font-body text-[8px] tracking-[0.15em] uppercase
-                             text-ink/30 hover:text-ink/60 transition-colors active:opacity-60"
+                             text-ink/45 hover:text-ink/70 transition-colors active:opacity-60"
                 >
                   {t.promptCard.editBtn}
                 </button>
@@ -147,7 +147,7 @@ export default function PromptCard({ prompt, onDelete, onShare, composeUsed, onE
           type="button"
           onClick={() => setExpanded((e) => !e)}
           className="flex items-center gap-1.5 mt-4 font-body text-[9px] tracking-[0.2em]
-                     uppercase text-ink/25 hover:text-ink/50 transition-colors duration-150 active:opacity-60"
+                     uppercase text-ink/45 hover:text-ink/70 transition-colors duration-150 active:opacity-60"
           aria-expanded={expanded}
         >
           {t.promptCard.breakdownBtn}
@@ -175,7 +175,7 @@ export default function PromptCard({ prompt, onDelete, onShare, composeUsed, onE
                 {breakdownRows.map(({ key, label }) => (
                   <div key={key} className="flex items-baseline gap-3">
                     <span className="w-[72px] shrink-0 font-body text-[9px] tracking-[0.15em]
-                                     uppercase text-ink/30">
+                                     uppercase text-ink/50">
                       {label}
                     </span>
                     <span className="font-body text-[12px] text-ink/70 leading-snug">

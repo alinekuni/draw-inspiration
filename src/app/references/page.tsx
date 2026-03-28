@@ -128,7 +128,7 @@ export default function ReferencesPage() {
         <p className="font-body text-[10px] tracking-[0.2em] uppercase text-ink-muted">
           {t.references.header}
         </p>
-        <p className="font-display italic text-[13px] text-ink/35 mt-0.5">
+        <p className="font-display italic text-[13px] text-ink/55 mt-0.5">
           {t.references.subheader}
         </p>
       </div>
@@ -149,7 +149,7 @@ export default function ReferencesPage() {
                 "relative mr-5 pb-2.5 pt-0.5 whitespace-nowrap shrink-0",
                 "font-body text-[10px] tracking-[0.15em] uppercase",
                 "transition-colors duration-100",
-                isActive ? "text-ink" : "text-ink/30 hover:text-ink/50"
+                isActive ? "text-ink" : "text-ink/45 hover:text-ink/70"
               )}
             >
               {f === "ALL" ? t.references.allFilter : (t.references.categories[f] ?? f)}
@@ -183,7 +183,7 @@ export default function ReferencesPage() {
               >
                 {/* Top row: category label + icon buttons */}
                 <div className="flex items-center justify-between mb-1">
-                  <p className="font-body text-[9px] tracking-[0.2em] uppercase text-ink/35">
+                  <p className="font-body text-[9px] tracking-[0.2em] uppercase text-ink/50">
                     {t.references.categories[board.category] ?? board.category}
                   </p>
                   {/* Circle icon buttons — stop propagation */}
@@ -193,7 +193,7 @@ export default function ReferencesPage() {
                       onClick={() => handleKeepBoard(board)}
                       aria-label={t.references.keepBtn}
                       className="w-7 h-7 rounded-full border border-ink/15 flex items-center justify-center
-                                 text-ink/35 hover:text-ink/65 hover:border-ink/30
+                                 text-ink/50 hover:text-ink/75 hover:border-ink/40
                                  transition-colors active:scale-90"
                     >
                       <HeartIcon />
@@ -203,7 +203,7 @@ export default function ReferencesPage() {
                       onClick={() => handleSparkBoard(board)}
                       aria-label={t.references.sparkBtn}
                       className="w-7 h-7 rounded-full border border-ink/15 flex items-center justify-center
-                                 text-ink/35 hover:text-ink/65 hover:border-ink/30
+                                 text-ink/50 hover:text-ink/75 hover:border-ink/40
                                  transition-colors active:scale-90"
                     >
                       <ArrowIcon />
@@ -225,7 +225,7 @@ export default function ReferencesPage() {
                     <span
                       key={chip}
                       className="rounded-full px-2 py-0.5 font-body text-[8px] tracking-[0.1em]
-                                 uppercase text-ink/30 bg-ink/[0.02]"
+                                 uppercase text-ink/45 bg-ink/[0.02]"
                     >
                       {chip}
                     </span>
