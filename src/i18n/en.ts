@@ -11,7 +11,7 @@ export const en: TranslationNamespace = {
     emptyTitle:     "something worth drawing lives here",
     emptySubtitle:  "pick a mood — or just spark",
     loadingText:    "finding the scene...",
-    errorText:      "Couldn't reach the API. Check your GROQ_API_KEY and try again.",
+    errorText:      "Generation failed. Please try again.",
     shiftBtn:       "Shift it",
     keepBtn:        "Keep it",
     keptBtn:        "Kept ✓",

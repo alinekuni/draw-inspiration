@@ -11,7 +11,7 @@ export const ptBR: TranslationNamespace = {
     emptyTitle:     "algo que vale a pena desenhar vive aqui",
     emptySubtitle:  "escolha um humor — ou apenas inspire",
     loadingText:    "encontrando a cena...",
-    errorText:      "Não foi possível acessar a API. Verifique sua GROQ_API_KEY e tente novamente.",
+    errorText:      "Não foi possível gerar. Tente novamente.",
     shiftBtn:       "Mudar",
     keepBtn:        "Guardar",
     keptBtn:        "Guardado ✓",

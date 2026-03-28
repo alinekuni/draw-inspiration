@@ -1,5 +1,7 @@
-# Draw Inspiration: Dual-Path References Flow
-## UX/UI Design & Implementation Guide
+# UX Specs — Dual-Path References Flow
+## Design & Implementation Reference
+
+> This is the detailed design spec for the References dual-path flow (Keep as mood board + Spark with inspiration). For the plain-language UX overview, see [ux-flow.md](./ux-flow.md).
 
 ---
 
