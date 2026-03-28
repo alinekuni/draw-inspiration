@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import PromptCard from "@/components/generate/PromptCard";
@@ -97,6 +97,14 @@ export default function SparkPage() {
     const url = `${window.location.origin}/s?d=${encoded}`;
     navigator.clipboard.writeText(url).catch(() => {});
   };
+
+  // Re-generate the current prompt when the language changes
+  const langMounted = useRef(false);
+  useEffect(() => {
+    if (!langMounted.current) { langMounted.current = true; return; }
+    if (screen === "generated") handleSpark(confirmedCompose);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang]);
 
   const handlePrev = () => { if (historyIndex > 0) setHistoryIndex((i) => i - 1); };
   const handleNext = () => { if (historyIndex < history.length - 1) setHistoryIndex((i) => i + 1); };
