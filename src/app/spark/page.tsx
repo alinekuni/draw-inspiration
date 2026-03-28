@@ -32,7 +32,7 @@ const fade = {
 };
 
 export default function SparkPage() {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const [screen, setScreen]             = useState<ScreenState>("empty");
   const [history, setHistory]           = useState<GeneratedPrompt[]>([]);
   const [composeHistory, setComposeHistory] = useState<string[][]>([]);
@@ -68,6 +68,7 @@ export default function SparkPage() {
       mood,
       style,
       locked: Object.keys(locked).length ? locked : undefined,
+      lang,
     });
     if (!result) { setScreen("error"); return; }
 

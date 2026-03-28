@@ -75,6 +75,7 @@ export async function POST(request: Request) {
     const mood   = sanitizeStringArray(body.mood);
     const style  = sanitizeStringArray(body.style);
     const locked = sanitizeLockedRecord(body.locked);
+    const lang   = typeof body.lang === "string" ? body.lang : "en";
 
     // Build user message from sanitized inputs
     const userContext: string[] = [];
@@ -89,12 +90,20 @@ export async function POST(request: Request) {
       ? userContext.join("\n")
       : "Generate a surprising, original drawing prompt.";
 
+    const LANG_INSTRUCTIONS: Record<string, string> = {
+      "pt-BR": "Write the title, prompt, and all breakdown values in Brazilian Portuguese. Keep chips in uppercase English.",
+    };
+    const langInstruction = LANG_INSTRUCTIONS[lang] ?? "";
+    const systemPrompt = langInstruction
+      ? `${SYSTEM_PROMPT}\n\n${langInstruction}`
+      : SYSTEM_PROMPT;
+
     const groq = new Groq({ apiKey });
     const completion = await groq.chat.completions.create({
       model:       "llama-3.3-70b-versatile",
       messages:    [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user",   content: userMessage   },
+        { role: "system", content: systemPrompt },
+        { role: "user",   content: userMessage  },
       ],
       temperature: 0.9,
       max_tokens:  512,

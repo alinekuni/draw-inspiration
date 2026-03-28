@@ -4,6 +4,7 @@ interface GenerateParams {
   mood?: string[];
   style?: string[];
   locked?: Record<string, string>;
+  lang?: string;
 }
 
 export async function generatePrompt(
