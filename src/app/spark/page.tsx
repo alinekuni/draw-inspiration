@@ -307,10 +307,12 @@ export default function SparkPage() {
               type="button"
               onClick={handleSave}
               disabled={isSaved}
-              className="flex-1 border border-ink/15 text-ink/70 rounded-full px-5 py-2.5
-                         font-body text-xs tracking-wide active:scale-95 transition-all duration-100
-                         disabled:opacity-40 disabled:cursor-default
-                         flex items-center justify-center gap-1.5"
+              className={`flex-1 rounded-full px-5 py-2.5 font-body text-xs tracking-wide
+                          transition-all duration-200 flex items-center justify-center gap-1.5
+                          ${isSaved
+                            ? "border border-olive/40 bg-olive/[0.07] text-olive/80 cursor-default"
+                            : "border border-ink/15 text-ink/70 active:scale-95"
+                          }`}
             >
               <SparkHeartIcon filled={isSaved} />
               {isSaved ? t.spark.keptBtn : t.spark.keepBtn}

@@ -117,6 +117,8 @@ export default function ReferencesPage() {
   const handleSparkBoard = (board: Board) => {
     setInspirationBoardId(board.id);
     setSelectedStyleChips(board.chips);
+    const boardName = t.references.boards[board.id]?.name;
+    showToast(boardName ? `${t.spark.inspiredBy} ${boardName}` : t.references.sparkBtn, "success");
     router.push("/spark");
   };
 
