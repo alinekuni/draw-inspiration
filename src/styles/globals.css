@@ -5,13 +5,20 @@
 @tailwind utilities;
 
 @layer base {
+  /* ── Light theme (default) ── */
   :root {
-    --color-paper: #f5f0e8;
-    --color-ink: #1a1814;
-    --color-olive: #5c6b3a;
-    --color-burnt-orange: #c4622d;
-    --color-muted-yellow: #d4a843;
-    --color-sky-blue: #7bafd4;
+    --color-canvas:    237 235 229;  /* #EDEBE5 — page background */
+    --color-paper:     245 240 232;  /* #F5F0E8 — card surface     */
+    --color-ink:        26  24  20;  /* #1A1814 — primary text      */
+    --color-ink-muted:  74  69  64;  /* #4A4540 — secondary text    */
+  }
+
+  /* ── Dark theme ── */
+  .dark {
+    --color-canvas:  26  24  20;  /* #1A1814 — same as light ink  */
+    --color-paper:   42  37  32;  /* #2A2520 — warm dark surface  */
+    --color-ink:    232 224 210;  /* #E8E0D0 — warm off-white     */
+    --color-ink-muted: 170 162 152; /* #AAA298 — muted light        */
   }
 
   html {
@@ -19,7 +26,7 @@
   }
 
   body {
-    @apply bg-sky-blue font-body text-ink antialiased;
+    @apply bg-canvas font-body text-ink antialiased;
   }
 
   /* Paper grain overlay */

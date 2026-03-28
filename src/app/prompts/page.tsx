@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import KeepCard from "@/components/keeps/KeepCard";
-import { getSavedPrompts, deletePrompt } from "@/lib/storage";
+import { getSavedPrompts, deletePrompt, getKeepStats } from "@/lib/storage";
 import type { GeneratedPrompt } from "@/types";
 
 export default function KeepsPage() {
@@ -21,8 +21,26 @@ export default function KeepsPage() {
     setKeeps((prev) => prev.filter((k) => k.id !== id));
   };
 
+  const handleExport = () => {
+    const data = JSON.stringify(
+      keeps.map(({ id, title, prompt, chips, createdAt, breakdown }) => ({
+        id, title, prompt, chips, createdAt, breakdown,
+      })),
+      null, 2
+    );
+    const blob = new Blob([data], { type: "application/json" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href     = url;
+    a.download = `keeps-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const stats = mounted ? getKeepStats(keeps) : null;
+
   return (
-    <div className="flex flex-col h-full bg-[#EDEBE5]">
+    <div className="flex flex-col h-full bg-canvas">
       <div className="flex-1 min-h-0 overflow-y-auto">
 
         {/* ── About — bare text, no card ── */}
@@ -73,11 +91,41 @@ export default function KeepsPage() {
           </div>
         ) : (
           <div className="px-5 pb-10">
-            <div className="flex items-baseline justify-between mb-3 border-t border-ink/[0.07] pt-4">
-              <span className="font-body text-[9px] tracking-[0.2em] uppercase text-ink/30">
-                {keeps.length} {keeps.length === 1 ? "scene" : "scenes"}
-              </span>
+            {/* List header — count + stats + export */}
+            <div className="border-t border-ink/[0.07] pt-4 mb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="font-body text-[9px] tracking-[0.2em] uppercase text-ink/30">
+                    {keeps.length} {keeps.length === 1 ? "scene" : "scenes"}
+                  </span>
+                  {stats && stats.totalPhotos > 0 && (
+                    <>
+                      <span className="text-ink/15 text-[9px]">·</span>
+                      <span className="font-body text-[9px] tracking-[0.12em] uppercase text-ink/25">
+                        {stats.totalPhotos} {stats.totalPhotos === 1 ? "drawing" : "drawings"}
+                      </span>
+                    </>
+                  )}
+                  {stats?.topChip && (
+                    <>
+                      <span className="text-ink/15 text-[9px]">·</span>
+                      <span className="font-body text-[9px] tracking-[0.12em] uppercase text-ink/25">
+                        {stats.topChip}
+                      </span>
+                    </>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={handleExport}
+                  className="font-body text-[9px] tracking-[0.15em] uppercase
+                             text-ink/25 hover:text-ink/55 transition-colors active:opacity-60"
+                >
+                  export ↓
+                </button>
+              </div>
             </div>
+
             <div className="space-y-3">
               <AnimatePresence initial={false}>
                 {keeps.map((keep) => (

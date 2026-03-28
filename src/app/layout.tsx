@@ -21,8 +21,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Apply saved theme before first paint — prevents flash */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme:dark)').matches))document.documentElement.classList.add('dark')}catch(e){}`,
+          }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -30,7 +36,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className="h-screen overflow-hidden flex flex-col bg-[#EDEBE5] font-body text-ink">
+      <body className="h-screen overflow-hidden flex flex-col bg-canvas font-body text-ink">
         <Providers>{children}</Providers>
       </body>
     </html>

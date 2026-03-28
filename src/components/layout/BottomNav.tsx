@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import ThemeToggle from "./ThemeToggle";
 
 const TABS = [
   { label: "Spark",      href: "/spark",      icon: "✦" },
@@ -46,6 +47,11 @@ export default function BottomNav() {
           </Link>
         );
       })}
+
+      {/* Theme toggle — right of tabs, fixed width */}
+      <div className="w-12 flex items-center justify-center border-l border-ink/[0.06]">
+        <ThemeToggle />
+      </div>
     </nav>
   );
 }

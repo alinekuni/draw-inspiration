@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: "class",
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,14 +10,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        paper: "#F5F0E8",
-        ink: "#1A1814",
-        olive: "#5C6B3A",
+        // CSS-variable-backed — support opacity modifiers AND dark mode
+        canvas:     "rgb(var(--color-canvas)   / <alpha-value>)",
+        paper:      "rgb(var(--color-paper)    / <alpha-value>)",
+        ink:        "rgb(var(--color-ink)      / <alpha-value>)",
+        "ink-muted":"rgb(var(--color-ink-muted)/ <alpha-value>)",
+        // Fixed accent colors
+        olive:          "#5C6B3A",
         "burnt-orange": "#C4622D",
         "muted-yellow": "#D4A843",
-        "sky-blue": "#7BAFD4",
-        "paper-dark": "#E8E0D0",
-        "ink-muted": "#4A4540",
+        "sky-blue":     "#7BAFD4",
+        "paper-dark":   "#E8E0D0",
       },
       fontFamily: {
         display: ["Instrument Serif", "Georgia", "serif"],

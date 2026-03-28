@@ -8,6 +8,7 @@ interface PromptCardProps {
   prompt: GeneratedPrompt;
   tilt?: "left" | "right" | "none";
   onDelete?: () => void;
+  onShare?: () => void;
   composeUsed?: string[];
   onEditCompose?: () => void;
 }
@@ -20,14 +21,21 @@ const BREAKDOWN_ROWS: { key: keyof PromptBreakdown; label: string }[] = [
   { key: "twist",       label: "Twist"       },
 ];
 
-export default function PromptCard({ prompt, onDelete, composeUsed, onEditCompose }: PromptCardProps) {
-  const [copied, setCopied]     = useState(false);
+export default function PromptCard({ prompt, onDelete, onShare, composeUsed, onEditCompose }: PromptCardProps) {
+  const [copied,   setCopied]   = useState(false);
+  const [shared,   setShared]   = useState(false);
   const [expanded, setExpanded] = useState(false);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(prompt.prompt);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleShare = () => {
+    onShare?.();
+    setShared(true);
+    setTimeout(() => setShared(false), 2000);
   };
 
   return (
@@ -41,12 +49,18 @@ export default function PromptCard({ prompt, onDelete, composeUsed, onEditCompos
 
         {/* Card actions — top right */}
         <div className="absolute top-4 right-4 flex items-center gap-2">
-          <button type="button" onClick={handleCopy} aria-label="Copy prompt"
+          {onShare && (
+            <button type="button" onClick={handleShare} aria-label="Share scene"
+              className="text-ink/30 hover:text-ink/60 transition-colors duration-150 active:scale-90">
+              {shared ? <CheckIcon /> : <ShareIcon />}
+            </button>
+          )}
+          <button type="button" onClick={handleCopy} aria-label="Copy scene"
             className="text-ink/30 hover:text-ink/60 transition-colors duration-150 active:scale-90">
             {copied ? <CheckIcon /> : <CopyIcon />}
           </button>
           {onDelete && (
-            <button type="button" onClick={onDelete} aria-label="Delete prompt"
+            <button type="button" onClick={onDelete} aria-label="Delete scene"
               className="text-ink/25 hover:text-burnt-orange/70 transition-colors duration-150 active:scale-90">
               <TrashIcon />
             </button>
@@ -176,6 +190,18 @@ export default function PromptCard({ prompt, onDelete, composeUsed, onEditCompos
 
       </div>
     </motion.div>
+  );
+}
+
+function ShareIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <circle cx="11" cy="2.5" r="1.5" stroke="currentColor" strokeWidth="1.2" />
+      <circle cx="11" cy="11.5" r="1.5" stroke="currentColor" strokeWidth="1.2" />
+      <circle cx="3"  cy="7"   r="1.5" stroke="currentColor" strokeWidth="1.2" />
+      <path d="M4.3 6.2L9.8 3.2M4.3 7.8L9.8 10.8"
+        stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
   );
 }
 

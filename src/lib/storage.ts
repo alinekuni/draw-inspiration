@@ -125,3 +125,25 @@ export function getPhotoStorageBytes(): number {
 
 /** 4 MB soft warning threshold */
 export const PHOTO_STORAGE_WARN_BYTES = 4 * 1024 * 1024;
+
+// ── Stats ───────────────────────────────────────────────────────────────────
+
+export interface KeepStats {
+  totalPhotos: number;
+  topChip: string | null;
+}
+
+export function getKeepStats(keeps: GeneratedPrompt[]): KeepStats {
+  if (typeof window === "undefined") return { totalPhotos: 0, topChip: null };
+  let totalPhotos = 0;
+  const chipCounts: Record<string, number> = {};
+  for (const keep of keeps) {
+    totalPhotos += getKeepPhotos(keep.id).length;
+    for (const chip of keep.chips) {
+      chipCounts[chip] = (chipCounts[chip] ?? 0) + 1;
+    }
+  }
+  const topChip = Object.entries(chipCounts)
+    .sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+  return { totalPhotos, topChip };
+}

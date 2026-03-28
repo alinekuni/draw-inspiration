@@ -11,6 +11,14 @@ import { savePrompt } from "@/lib/storage";
 import { ChipGroup } from "@/components/ui/Chip";
 import type { GeneratedPrompt } from "@/types";
 
+function encodePromptForShare(data: GeneratedPrompt): string {
+  const json = JSON.stringify(data);
+  const bytes = new TextEncoder().encode(json);
+  let binary = "";
+  bytes.forEach((b) => { binary += String.fromCharCode(b); });
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
+}
+
 type ScreenState = "empty" | "loading" | "generated" | "error";
 
 const QUICK_MOODS = ["MELANCHOLIC", "PLAYFUL", "EERIE", "SERENE", "TENDER"];
@@ -80,13 +88,20 @@ export default function SparkPage() {
     setSavedIds((prev) => new Set(Array.from(prev).concat(currentPrompt.id)));
   };
 
+  const handleShare = () => {
+    if (!currentPrompt) return;
+    const encoded = encodePromptForShare(currentPrompt);
+    const url = `${window.location.origin}/s?d=${encoded}`;
+    navigator.clipboard.writeText(url).catch(() => {});
+  };
+
   const handlePrev = () => { if (historyIndex > 0) setHistoryIndex((i) => i - 1); };
   const handleNext = () => { if (historyIndex < history.length - 1) setHistoryIndex((i) => i + 1); };
 
   const sceneNumber = String(historyIndex + 1).padStart(2, "0");
 
   return (
-    <div className="flex flex-col h-full bg-[#EDEBE5]">
+    <div className="flex flex-col h-full bg-canvas">
 
       {/* ── Content ── */}
       <div className="flex-1 min-h-0 relative">
@@ -151,6 +166,7 @@ export default function SparkPage() {
                 >
                   <PromptCard
                     prompt={currentPrompt}
+                    onShare={handleShare}
                     composeUsed={currentCompose ?? undefined}
                     onEditCompose={() => setSheetOpen(true)}
                   />
@@ -178,7 +194,7 @@ export default function SparkPage() {
       </div>
 
       {/* ── Action bar ── */}
-      <div className="flex-shrink-0 px-5 pt-3 pb-3 border-t border-ink/[0.06] bg-[#EDEBE5]/90 backdrop-blur-sm">
+      <div className="flex-shrink-0 px-5 pt-3 pb-3 border-t border-ink/[0.06] bg-canvas/90 backdrop-blur-sm">
 
         {/* Compose row — always visible */}
         <AnimatePresence mode="wait">

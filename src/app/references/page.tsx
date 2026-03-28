@@ -108,7 +108,7 @@ export default function ReferencesPage() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#EDEBE5]">
+    <div className="flex flex-col h-full bg-canvas">
 
       {/* Header */}
       <div className="flex-shrink-0 px-5 pt-5 pb-1">
